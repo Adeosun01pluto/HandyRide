@@ -1,15 +1,16 @@
 // import { useState } from "react"
 
 import { FiSearch } from "react-icons/fi"
+import handy from '../assets/Handy_logo1.png'
 
 const Navbar = () => {
     // const [open, setOpen] = useState(false)
     return (
-        <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
+        <nav className="flex items-center justify-between px-0 md:px-16 lg:px-24 xl:px-32 py-2 border-b border-gray-300 bg-white relative transition-all">
 
             <a href="#" className="text-3xl font-bold text-red-500">
-                HandyRide
-                {/* <img className="h-9" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoColored.svg" alt="dummyLogoColored" /> */}
+                {/* HandyRide */}
+                <img className="h-12 w-32 object-cover" src={handy} alt="dummyLogoColored" />
             </a>
 
             {/* Desktop Menu */}

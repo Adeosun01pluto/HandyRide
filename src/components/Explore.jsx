@@ -80,43 +80,41 @@ const Explore = () => {
       <h2 className="text-xl md:text-2xl font-bold mb-6">All Restaurants</h2>
       {/* <div className="flex flex-wrap gap-4 justify-between"> */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+
         {restaurants.map((restaurant, index) => (
-            <div key={index} className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition w-full sm:w-full ">
-                <div className="relative h-32 md:h-40 w-full">
-                    <img
-                    src={restaurant.image}
-                    alt={restaurant.name}
-                    className="w-full h-full object-cover"
-                    />
-                    {restaurant.preorder && (
-                    <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
-                        Pre-order
-                    </span>
-                    )}
-                </div>
-                <div className="p-3">
-                    <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
-                    {restaurant.name}
-                    </h3>
-                    {/* <div className="flex items-center text-xs text-gray-500 mt-1 gap-1">
-                    <BsClock /> <span>{restaurant.time}</span>
-                    </div> */}
-                    <div className="flex flex-wrap gap-1 mt-2 text-[11px]">
-                    {/* {restaurant.tags.map((tag, i) => (
-                        <span
-                        key={i}
-                        className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
-                        >
-                        {tag}
-                        </span>
-                    ))} */}
-                    </div>
-                    <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
-                    {/* <span>{restaurant.rating.toFixed(2)}</span> */}
-                    {/* <AiFillStar className="ml-1" /> */}
-                    </div>
-                </div>
+          <a
+            key={index}
+            href="https://wa.me/message/5QWMCDR63QNVL1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition w-full sm:w-full"
+          >
+            <div className="relative h-32 md:h-40 w-full">
+              <img
+                src={restaurant.image}
+                alt={restaurant.name}
+                className="w-full h-full object-cover"
+              />
+              {restaurant.preorder && (
+                <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
+                  Pre-order
+                </span>
+              )}
             </div>
+            <div className="p-3">
+              <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
+                {restaurant.name}
+              </h3>
+              <div className="flex flex-wrap gap-1 mt-2 text-[11px]">
+                {/* You can show tags here if needed */}
+              </div>
+              <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
+                {/* Optional rating */}
+                {/* <span>{restaurant.rating?.toFixed(2)}</span>
+                <AiFillStar className="ml-1" /> */}
+              </div>
+            </div>
+          </a>
         ))}
       </div>
     </section>
@@ -124,3 +122,45 @@ const Explore = () => {
 };
 
 export default Explore;
+
+
+
+
+        // {restaurants.map((restaurant, index) => (
+        //     <div key={index} className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition w-full sm:w-full ">
+        //         <div className="relative h-32 md:h-40 w-full">
+        //             <img
+        //             src={restaurant.image}
+        //             alt={restaurant.name}
+        //             className="w-full h-full object-cover"
+        //             />
+        //             {restaurant.preorder && (
+        //             <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
+        //                 Pre-order
+        //             </span>
+        //             )}
+        //         </div>
+        //         <div className="p-3">
+        //             <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
+        //             {restaurant.name}
+        //             </h3>
+        //             {/* <div className="flex items-center text-xs text-gray-500 mt-1 gap-1">
+        //             <BsClock /> <span>{restaurant.time}</span>
+        //             </div> */}
+        //             <div className="flex flex-wrap gap-1 mt-2 text-[11px]">
+        //             {/* {restaurant.tags.map((tag, i) => (
+        //                 <span
+        //                 key={i}
+        //                 className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+        //                 >
+        //                 {tag}
+        //                 </span>
+        //             ))} */}
+        //             </div>
+        //             <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
+        //             {/* <span>{restaurant.rating.toFixed(2)}</span> */}
+        //             {/* <AiFillStar className="ml-1" /> */}
+        //             </div>
+        //         </div>
+        //     </div>
+        // ))}

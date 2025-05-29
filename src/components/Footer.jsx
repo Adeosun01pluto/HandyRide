@@ -1,20 +1,19 @@
 import React from 'react';
-
+import handy from '../assets/Handy_logo1.png';
 const Footer = () => {
   return (
     <>
       <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500">
         <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
           <div className="md:max-w-96">
-            <h2 className='font-bold text-2xl md:text-3xl text-red-500'>HandyRide</h2>
-            {/* <img
-              className="h-9"
-              src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/dummyLogo/dummyLogoDark.svg"
-              alt="dummyLogoDark"
-            /> */}
+            {/* <h2 className='font-bold text-2xl md:text-3xl text-red-500'>HandyRide</h2> */}
+            <img
+              className="h-12 w-32 object-cover"
+              src={handy}
+              alt="handyride"
+            />
             <p className="mt-6 text-sm">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
+              Order Food from Your Favorite restaurants like Item 7, BOA , KFC, The Place, etc. with us & Also Deliver Your Packages as a business Owner here in Ilorin Cheaper, Faster and Reliable
             </p>
           </div>
           <div className="flex-1 flex md:flex-row flex-col items-start md:justify-end gap-5 md:gap-20">
