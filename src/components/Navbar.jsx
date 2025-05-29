@@ -1,62 +1,61 @@
-// import { useState } from "react"
-
-import { FiSearch } from "react-icons/fi"
+import { useState } from "react"
+import { FiMenu, FiSearch, FiX } from "react-icons/fi"
 import handy from '../assets/Handy_logo1.png'
 
 const Navbar = () => {
-    // const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false)
+
     return (
-        <nav className="flex items-center justify-between px-0 md:px-16 lg:px-24 xl:px-32 py-2 border-b border-gray-300 bg-white relative transition-all">
+        <>
+            <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
+                <div className="flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 py-3">
+                    <a href="#" className="text-3xl font-bold text-red-500">
+                        <img className="h-14 w-32 object-cover" src={handy} alt="Handy logo" />
+                    </a>
 
-            <a href="#" className="text-3xl font-bold text-red-500">
-                {/* HandyRide */}
-                <img className="h-12 w-32 object-cover" src={handy} alt="dummyLogoColored" />
-            </a>
+                    {/* Desktop Menu */}
+                    <div className="hidden sm:flex items-center gap-8">
+                        <a href="#">Home</a>
+                        <a href="#">About</a>
+                        <a href="#">Contact</a>
 
-            {/* Desktop Menu */}
-            <div className="hidden sm:flex items-center gap-8">
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
+                        {/* Search Box */}
+                        <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
+                            <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
+                            <FiSearch className="text-red-500" />
+                        </div>
 
-                <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-                    <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search products" />
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10.836 10.615 15 14.695" stroke="red" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                        <path clip-rule="evenodd" d="M9.141 11.738c2.729-1.136 4.001-4.224 2.841-6.898S7.67.921 4.942 2.057C2.211 3.193.94 6.281 2.1 8.955s4.312 3.92 7.041 2.783" stroke="red" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+                        {/* Cart Icon */}
+                        <div className="relative cursor-pointer">
+                            <svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0" stroke="red" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <button className="absolute -top-2 -right-3 text-xs text-white bg-red-500 w-[18px] h-[18px] rounded-full">3</button>
+                        </div>
+                    </div>
+
+                    {/* Mobile Menu Toggle */}
+                    <button onClick={() => setOpen(!open)} aria-label="Menu" className="sm:hidden">
+                        <FiSearch className="w-6 h-6 text-red-600" />
+                    </button>
                 </div>
 
-                <div className="relative cursor-pointer">
-                    <svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0" stroke="red" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <button className="absolute -top-2 -right-3 text-xs text-white bg-red-500 w-[18px] h-[18px] rounded-full">3</button>
-                </div>
+                {/* Mobile Menu */}
+                {open && (
+                    <div className="sm:hidden bg-white shadow-md py-4 flex flex-col items-start gap-3 px-5 text-sm">
+                        <a href="#" className="block w-full">Home</a>
+                        <a href="#" className="block w-full">About</a>
+                        <a href="#" className="block w-full">Contact</a>
+                        <button className="px-6 py-2 bg-red-500 hover:bg-red-600 transition text-white rounded-full text-sm w-full text-center">
+                            Login
+                        </button>
+                    </div>
+                )}
+            </nav>
 
-                {/* <button className="cursor-pointer px-8 py-2 bg-red-500 hover:bg-red-600 transition text-white rounded-full">
-                    Login
-                </button> */}
-            </div>
-
-            {/* <button onClick={() => open ? setOpen(false) : setOpen(true)} aria-label="Menu" className="sm:hidden"> */}
-            <button aria-label="Menu" className="sm:hidden">
-                {/* Menu Icon SVG */}
-                <FiSearch className="w-6 h-6 text-red-600" />
-
-            </button>
-
-            {/* Mobile Menu */}
-            {/* <div className={`${open ? 'flex' : 'hidden'} absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}>
-                <a href="#" className="block">Home</a>
-                <a href="#" className="block">About</a>
-                <a href="#" className="block">Contact</a>
-                <button className="cursor-pointer px-6 py-2 mt-2 bg-red-500 hover:bg-red-600 transition text-white rounded-full text-sm">
-                    Login
-                </button>
-            </div> */}
-
-        </nav>
+            {/* Spacer div to offset fixed navbar height */}
+            <div className="h-[70px] sm:h-[80px]"></div>
+        </>
     )
 }
 
