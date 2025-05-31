@@ -64,7 +64,7 @@
 //         className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
 //       >
 //         <BiTask className="w-4 h-4" />
-//         Get Help Now
+//         Run Errand Now
 //       </a>
 //     </div>
 //   );
@@ -132,6 +132,7 @@ import React from 'react';
 import { MdChecklist, MdShoppingCart, MdAccountBalance, MdLocalGasStation } from 'react-icons/md';
 import { FaShoppingBag, FaMoneyBillWave, FaUserTie, FaClipboardList } from 'react-icons/fa';
 import { BiTask } from 'react-icons/bi';
+import { Link } from 'react-router';
 
 const ErrandsPage = () => {
   const errandServices = [
@@ -142,20 +143,6 @@ const ErrandsPage = () => {
       whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20need%20help%20with%20Shopping%20Errands.%20Please%20help%20me%20with-',
       color: 'bg-blue-500'
     },
-    {
-      title: 'Bank Errands',
-      description: 'Bank transactions, deposits, withdrawals, and document collection',
-      icon: <MdAccountBalance className="w-8 h-8" />,
-      whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20need%20help%20with%20Bank%20Errands.%20Please%20help%20me%20with-',
-      color: 'bg-red-500'
-    },
-    // {
-    //   title: 'Bill Payments',
-    //   description: 'Pay your electricity, water, cable TV, and other utility bills',
-    //   icon: <FaMoneyBillWave className="w-8 h-8" />,
-    //   whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20need%20help%20with%20Bill%20Payments.%20Please%20help%20me%20pay-',
-    //   color: 'bg-yellow-500'
-    // },
     {
       title: 'Document Collection',
       description: 'Collect documents, certificates, and important papers for you',
@@ -180,7 +167,10 @@ const ErrandsPage = () => {
   ];
 
   const ServiceCard = ({ service, index }) => (
-    <div 
+    <Link
+      to={service.whatsappLink}
+      target="_blank"
+      rel="noopener noreferrer" 
       className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 border border-gray-100 transform hover:scale-105 hover:-translate-y-2 animate-fadeInUp group"
       style={{
         animationDelay: `${index * 0.15}s`,
@@ -193,16 +183,16 @@ const ErrandsPage = () => {
       </div>
       <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-600 transition-colors duration-300">{service.title}</h3>
       <p className="text-gray-600 text-sm mb-4">{service.description}</p>
-      <a
-        href={service.whatsappLink}
+      <Link
+        to={service.whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
         className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 hover:shadow-lg"
       >
         <BiTask className="w-4 h-4 animate-pulse" />
-        Get Help Now
-      </a>
-    </div>
+        Run Errand Now!
+      </Link>
+    </Link>
   );
 
   return (

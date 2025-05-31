@@ -129,8 +129,9 @@
 
 import React from 'react';
 import { FaTruck, FaBoxOpen, FaShippingFast, FaMapMarkerAlt } from 'react-icons/fa';
-import { MdLocalShipping, MdOutbox, MdMoveToInbox } from 'react-icons/md';
+import { MdLocalShipping, MdOutbox, MdMoveToInbox, MdDeliveryDining } from 'react-icons/md';
 import { BiPackage } from 'react-icons/bi';
+import { Link } from 'react-router';
 
 const LogisticsPage = () => {
   const sendServices = [
@@ -168,7 +169,10 @@ const LogisticsPage = () => {
   ];
 
   const ServiceCard = ({ service, type, index }) => (
-    <div 
+    <Link
+      to={service.whatsappLink}
+      target="_blank"
+      rel="noopener noreferrer"
       className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 border border-gray-100 transform hover:scale-105 hover:-translate-y-2 animate-fadeInUp group"
       style={{
         animationDelay: `${index * 0.2}s`,
@@ -187,10 +191,10 @@ const LogisticsPage = () => {
         rel="noopener noreferrer"
         className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 hover:shadow-lg"
       >
-        <FaShippingFast className="w-4 h-4 animate-pulse" />
+        <MdDeliveryDining className="w-4 h-4 animate-pulse" />
         {type === 'send' ? 'Send Now' : 'Receive Now'}
       </a>
-    </div>
+    </Link>
   );
 
   return (
@@ -200,7 +204,7 @@ const LogisticsPage = () => {
         <div className="absolute inset-0 bg-opacity-20"></div>
         <div className="relative px-4 md:px-10 lg:px-20 py-8 transform transition-all duration-700 animate-slideInDown">
           <div className="flex items-center gap-3 mb-4">
-            <FaTruck className="w-8 h-8 animate-bounce" />
+            <MdDeliveryDining className="w-8 h-8 animate-bounce" />
             <h1 className="text-2xl md:text-3xl font-bold">Logistics Services</h1>
           </div>
           <p className="text-red-100 text-sm md:text-base opacity-90">
