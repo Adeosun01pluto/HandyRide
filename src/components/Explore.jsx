@@ -148,76 +148,91 @@
 import React from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsClock } from 'react-icons/bs';
+import { FaShippingFast } from 'react-icons/fa';
 import { MdRestaurant } from 'react-icons/md';
 
 const restaurants = [
   {
     name: 'Item 7',
+    deliveryAmount:"500",
     image: 'https://item7.vercel.app/assets/Item7-gupESEli.png',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20item%207,%20to%20be%20delivered%20to%20-'
   },
   {
     name: 'BOA',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20BOA,%20to%20be%20delivered%20to%20-'
   },
   {
     name: 'SUNAJ',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD4c38CIJsnLH7ZAKobdJUx3-PncMtSdZ-1Q&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20SUNAJ,%20to%20be%20delivered%20to%20-'
   },
   {
     name: 'Unigate Foods',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Unigate%20Foods,%20to%20be%20delivered%20to%20-'
   },
   {
     name: 'Fruitos Dome',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-Lo8ebAv75IQQiPhqUwhPmoC3rRE9NhLzmipTAUlTIniq9rJNEXLxYlXulkep5FSUmdqj&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Fruitos%20Dome,%20to%20be%20delivered%20to%20-'
   },
   {
     name: 'Shawarma Central',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIXfdsgKW-ytZ8qf7cfnNBSruO-E-Gi3b4RlRoC2s9Sx_baoDQHm-7vLNqlA4pjVO-danu_A&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Sharwarma%20Central,%20to%20be%20delivered%20to-'
   },
   {
     name: 'The Place',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20The%20Place,%20to%20be%20delivered%20to-'
   },
   {
     name: 'Iya Yusuf',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMUal01AaJESvCpTL-klt6GxAmIJF8X6au3WtYNPomWcropUMj4HkW7hrhs9vuGjuMuTodsQ&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Iya%20Yusuf%20to%20be%20delivered%20to-'
   },
   {
     name: 'Dope Spag',
+    deliveryAmount:"500",
     image: 'https://i.pinimg.com/736x/23/7b/80/237b80be2412c1a95b0a5c20a025c432.jpg',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Dope%20Spag%20to%20be%20delivered%20to-'
   },
   {
     name: 'Xtra Plate',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjQ9PNISxcFkqxDjCAGcDDuF7dItNV0iEBNg&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Xtra%20Plate%20to%20be%20delivered%20to-'
   },
   {
     name: 'T&K',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20T&K%20to%20be%20delivered%20to-'
   },
   {
     name: 'KFC',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20KFC%20to%20be%20delivered%20to-'
   },
   {
     name: "Domino's Pizza",
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXQk31gDfgpn2GLYYeuCNYd3PHCfrHVje2ei_qxNV3tOnx2VNYoHoHlHU&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Domino%E2%80%99s%20Pizza%20to%20be%20delivered%20to-'
   },
   {
     name: 'Coldstone Creamery',
+    deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSeiPoZ4SS7CYjjNaKlvdsl-bjiSJ2sxewjgxFYtoQJD-K1oHijJCPijHtAYPcMenYYuxnSQ&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Coldstone%20Creamery%20to%20be%20delivered%20to-'
   }
@@ -279,11 +294,12 @@ const Explore = () => {
                   {restaurant.name}
                 </h3>
                 
-                <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
-                  {restaurant.rating && (
+                <div className="text-red-500 flex items-center justify-start mt-2 text-sm">
+                  {restaurant.deliveryAmount && (
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
-                      <span className="font-medium">{restaurant.rating.toFixed(2)}</span>
-                      <AiFillStar className="animate-pulse" />
+                      <span>Delivery From</span>
+                      <span className="font-bold">₦{restaurant.deliveryAmount}</span>
+                      {/* <AiFillStar className="animate-pulse" /> */}
                     </div>
                   )}
                 </div>
@@ -293,6 +309,46 @@ const Explore = () => {
               </div>
             </a>
           ))}
+        </div>
+        {/* Contact Info */}
+        <div 
+          className="mt-7 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-6 md:p-8 text-center transform transition-all duration-500 hover:scale-105 hover:shadow-2xl animate-fadeInUp"
+          style={{ 
+            animationDelay: '0.8s',
+            opacity: 0,
+            animation: `fadeInUp 0.6s ease-out 0.8s forwards`
+          }}
+        >
+          <MdRestaurant className="w-12 h-12 mx-auto mb-4 animate-bounce" />
+          <h3 className="text-xl md:text-2xl font-bold mb-2">Don't See Your Favorite Restaurant?</h3>
+          <p className="text-red-100 mb-2 text-sm md:text-base leading-relaxed">
+            No worries, We got you!
+          </p>
+          {/* 
+          <div className="space-y-3 mb-6">
+            <p className="text-red-100 text-sm flex items-center justify-center gap-2">
+              <BsClock className="w-4 h-4" />
+              Same delivery fee applies (₦500)
+            </p>
+            <p className="text-red-100 text-sm flex items-center justify-center gap-2">
+              <FaShippingFast className="w-4 h-4 animate-pulse" />
+              Fast delivery across Ilorin
+            </p>
+          </div> */}
+          <a
+            href="https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20want%20to%20order%20from%20a%20restaurant%20not%20listed.%20Restaurant%20name:%20[Please%20specify]%20-%20Food%20items:%20[Please%20specify]%20-%20Delivery%20address:%20[Please%20specify]"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-white text-red-600 font-bold py-3 px-6 rounded-full hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 hover:shadow-xl group"
+          >
+            <MdRestaurant className="w-5 h-5 group-hover:animate-spin" />
+            Order from Any Restaurant
+            <FaShippingFast className="w-5 h-5 group-hover:animate-pulse" />
+          </a>
+          
+          <p className="text-red-100 text-xs mt-4 opacity-80">
+            Just tell us the restaurant name and what you want to order!
+          </p>
         </div>
       </div>
 
