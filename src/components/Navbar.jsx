@@ -112,12 +112,12 @@ const Navbar = () => {
     return (
         <>
             <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
-                <div className="flex items-center justify-between px-4 md:px-16 lg:px-24 xl:px-32 py-3">
+                <div className="flex items-center justify-between px-2 md:px-16 lg:px-24 xl:px-32 py-3">
                     <button 
                         onClick={() => handleNavigation('/foods')} 
                         className="text-3xl font-bold text-red-500"
                     >
-                        <img className="h-14 w-32 object-cover" src={handy} alt="Handy logo" />
+                        <img className="h-16 w-48 ml-[-10px] object-cover" src={handy} alt="Handy logo" />
                     </button>
 
                     {/* Desktop Menu */}

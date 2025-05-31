@@ -294,7 +294,7 @@ const Explore = () => {
                   {restaurant.name}
                 </h3>
                 
-                <div className="text-red-500 flex items-center justify-start mt-2 text-sm">
+                <div className="text-red-500/80 flex items-center justify-start mt-2 text-sm">
                   {restaurant.deliveryAmount && (
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
                       <span>Delivery From</span>
