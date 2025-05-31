@@ -256,7 +256,7 @@ const Explore = () => {
       </div>
 
       {/* Main Content */}
-      <div className="wrapper px-4 md:px-10 lg:px-20 py-10 transform transition-all duration-500 animate-slideInUp">
+      <div className="wrapper px-4 md:px-10 lg:px-20 pt-3 pb-10 transform transition-all duration-500 animate-slideInUp">
         <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800 animate-fadeInLeft">
           Ilorin Restaurants
         </h2>

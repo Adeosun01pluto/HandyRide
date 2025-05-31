@@ -229,14 +229,6 @@ const FeedbackPage = () => {
   const [selectedService, setSelectedService] = useState('');
   const [feedbackType, setFeedbackType] = useState('');
 
-  const services = [
-    'Food Delivery',
-    'Logistics/Package Delivery',
-    'Errands',
-    'Customer Service',
-    'Overall Experience'
-  ];
-
   const feedbackTypes = [
     { type: 'compliment', label: 'Compliment', icon: <BiHappy className="w-6 h-6" />, color: 'bg-green-500' },
     { type: 'suggestion', label: 'Suggestion', icon: <BiMeh className="w-6 h-6" />, color: 'bg-blue-500' },
@@ -316,52 +308,6 @@ const FeedbackPage = () => {
             )}
           </div>
 
-          {/* Service Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Which service are you reviewing?
-            </label>
-            <select
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 hover:shadow-md"
-            >
-              <option value="">Select a service</option>
-              {services.map((service, index) => (
-                <option key={index} value={service}>{service}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Feedback Type */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Type of feedback
-            </label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {feedbackTypes.map((type, index) => (
-                <button
-                  key={type.type}
-                  onClick={() => setFeedbackType(type.label)}
-                  className={`p-4 rounded-lg border-2 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-lg ${
-                    feedbackType === type.label
-                      ? `${type.color} text-white border-transparent animate-pulse`
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
-                  }`}
-                  style={{
-                    animationDelay: `${index * 0.1}s`
-                  }}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className={`transition-transform duration-300 ${feedbackType === type.label ? 'scale-110 rotate-12' : 'hover:scale-110'}`}>
-                      {type.icon}
-                    </div>
-                    <span className="font-medium">{type.label}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Submit Button */}
           <div className="text-center">

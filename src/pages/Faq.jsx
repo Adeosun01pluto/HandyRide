@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 const HandyRideFAQ = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
@@ -112,13 +113,13 @@ const HandyRideFAQ = () => {
         <div className="max-w-2xl mx-auto text-center mb-10 lg:mb-14 opacity-0 animate-pulse" 
              style={{animation: 'fadeInUp 0.6s ease-out 0.2s forwards'}}>
           <h2 className="text-2xl font-bold md:text-4xl md:leading-tight text-gray-800">
-            Your questions, answered
+            <FaQuestionCircle />  FAQ
           </h2>
           <p className="mt-2 text-gray-600">Get quick answers to common questions about our service</p>
         </div>
 
         {/* FAQ Items */}
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-3xl mx-auto space-y-2 md:space-y-4">
           {faqItems.map((item, index) => (
             <div 
               key={item.id}
@@ -127,7 +128,7 @@ const HandyRideFAQ = () => {
                 animation: `fadeInUp 0.6s ease-out ${0.3 + (index * 0.1)}s forwards`
               }}
             >
-              <div className="p-6">
+              <div className="p-3 lg:p-6">
                 <button 
                   className="w-full flex items-center justify-between text-left"
                   onClick={() => toggleAccordion(item.id)}
@@ -136,7 +137,7 @@ const HandyRideFAQ = () => {
                     <div className={`${item.iconBg} text-white p-2 rounded-lg`}>
                       {item.icon}
                     </div>
-                    <span className="text-lg font-semibold text-gray-800">{item.question}</span>
+                    <span className="text-sm lg:text-lg font-semibold text-gray-800">{item.question}</span>
                   </div>
                   <svg 
                     className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${

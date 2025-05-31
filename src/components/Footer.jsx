@@ -1,5 +1,6 @@
 import React from 'react';
 import handy from '../assets/Handy_logo1.png';
+import { IoLogoWhatsapp } from 'react-icons/io';
 const Footer = () => {
   return (
     <>
@@ -27,10 +28,10 @@ const Footer = () => {
               </ul>
             </div> */}
             <div>
-              <h2 className="font-semibold mb-5 text-gray-800">Get in touch</h2>
+              <h2 className="font-semibold mb-5 text-gray-800">Contacts</h2>
               <div className="text-sm space-y-2">
-                <p>+234 911 8347 755</p>
-                <p>handytech.ng@gmail.com</p>
+                <p className='flex items-center'><IoLogoWhatsapp/> <span> +234 911 8347 755</span></p>
+                <p>handyride.app@gmail.com</p>
               </div>
             </div>
           </div>
