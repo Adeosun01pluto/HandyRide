@@ -257,7 +257,7 @@ const Explore = () => {
 
       {/* Main Content */}
       <div className="wrapper px-4 md:px-10 lg:px-20 py-10 transform transition-all duration-500 animate-slideInUp">
-        <h2 className="text-xl md:text-2xl font-bold mb-6 text-gray-800 animate-fadeInLeft">
+        <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800 animate-fadeInLeft">
           Ilorin Restaurants
         </h2>
         
@@ -290,7 +290,7 @@ const Explore = () => {
               </div>
               
               <div className="p-3 relative">
-                <h3 className="text-md md:text-lg font-semibold text-gray-800 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
+                <h3 className="text-lg md:text-lg font-bold text-gray-800 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
                   {restaurant.name}
                 </h3>
                 
