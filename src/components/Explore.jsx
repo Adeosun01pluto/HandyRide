@@ -1,166 +1,373 @@
+// import React from 'react';
+// import { AiFillStar } from 'react-icons/ai';
+// import { BsClock } from 'react-icons/bs';
+// import { MdRestaurant } from 'react-icons/md';
+
+// const restaurants = [
+//   {
+//     name: 'Item 7',
+//     image: 'https://item7.vercel.app/assets/Item7-gupESEli.png',
+//     rating: 4.44,
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20item%207,%20to%20be%20delivered%20to%20-'
+//   },
+//   {
+//     name: 'BOA',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20BOA,%20to%20be%20delivered%20to%20-'
+//   },
+//   {
+//     name: 'SUNAJ',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD4c38CIJsnLH7ZAKobdJUx3-PncMtSdZ-1Q&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20SUNAJ,%20to%20be%20delivered%20to%20-'
+//   },
+//   {
+//     name: 'Unigate Foods',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Unigate%20Foods,%20to%20be%20delivered%20to%20-'
+//   },
+//   {
+//     name: 'Fruitos Dome',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-Lo8ebAv75IQQiPhqUwhPmoC3rRE9NhLzmipTAUlTIniq9rJNEXLxYlXulkep5FSUmdqj&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Fruitos%20Dome,%20to%20be%20delivered%20to%20-'
+//   },
+//   {
+//     name: 'Shawarma Central',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIXfdsgKW-ytZ8qf7cfnNBSruO-E-Gi3b4RlRoC2s9Sx_baoDQHm-7vLNqlA4pjVO-danu_A&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Sharwarma%20Central,%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'The Place',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20The%20Place,%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'Iya Yusuf',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMUal01AaJESvCpTL-klt6GxAmIJF8X6au3WtYNPomWcropUMj4HkW7hrhs9vuGjuMuTodsQ&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Iya%20Yusuf%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'Dope Spag',
+//     image: 'https://i.pinimg.com/736x/23/7b/80/237b80be2412c1a95b0a5c20a025c432.jpg',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Dope%20Spag%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'Xtra Plate',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjQ9PNISxcFkqxDjCAGcDDuF7dItNV0iEBNg&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Xtra%20Plate%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'T&K',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20T&K%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'KFC',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20KFC%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: "Domino's Pizza",
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXQk31gDfgpn2GLYYeuCNYd3PHCfrHVje2ei_qxNV3tOnx2VNYoHoHlHU&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Domino%E2%80%99s%20Pizza%20to%20be%20delivered%20to-'
+//   },
+//   {
+//     name: 'Coldstone Creamery',
+//     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSeiPoZ4SS7CYjjNaKlvdsl-bjiSJ2sxewjgxFYtoQJD-K1oHijJCPijHtAYPcMenYYuxnSQ&s',
+//     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Coldstone%20Creamery%20to%20be%20delivered%20to-'
+//   }
+// ];
+
+// const Explore = () => {
+//   return (
+//     <section className="">
+//       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+//         <div className="px-4 md:px-10 lg:px-20 py-8">
+//           <div className="flex items-center gap-3 mb-4">
+//             <MdRestaurant className="w-8 h-8" />
+//             <h1 className="text-2xl md:text-3xl font-bold">Food Delivery</h1>
+//           </div>
+//           <p className="text-red-100 text-sm md:text-base">
+//             Delicious meals from Ilorin's best restaurants, delivered fresh to your doorstep
+//           </p>
+//         </div>
+//       </div>
+//       <div className="wrapper px-4 md:px-10 lg:px-20 py-10">
+//         <h2 className="text-xl md:text-2xl font-bold mb-6">Ilorin Restaurants</h2>
+//         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+//           {restaurants.map((restaurant, index) => (
+//             <a
+//               key={index}
+//               href={restaurant.whatsappLink}
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="block bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition w-full sm:w-full"
+//             >
+//               <div className="relative h-32 md:h-40 w-full">
+//                 <img
+//                   src={restaurant.image}
+//                   alt={restaurant.name}
+//                   className="w-full h-full object-cover"
+//                 />
+//                 {restaurant.preorder && (
+//                   <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
+//                     Pre-order
+//                   </span>
+//                 )}
+//               </div>
+//               <div className="p-3">
+//                 <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
+//                   {restaurant.name}
+//                 </h3>
+//                 <div className="flex flex-wrap gap-1 mt-2 text-[11px]">
+//                   {/* You can show tags here if needed */}
+//                 </div>
+//                 <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
+//                   {restaurant.rating && (
+//                     <>
+//                       <span>{restaurant.rating.toFixed(2)}</span>
+//                       <AiFillStar className="ml-1" />
+//                     </>
+//                   )}
+//                 </div>
+//               </div>
+//             </a>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default Explore;
+
+
+
+
+
+
 import React from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsClock } from 'react-icons/bs';
+import { MdRestaurant } from 'react-icons/md';
 
 const restaurants = [
-    {
-      name: 'Item 7 (Go)',
-      image: 'https://item7.vercel.app/assets/Item7-gupESEli.png',
-    //   tags: ['RESTAURANT'],
-    //   time: '15 - 25 mins',
-      rating: 4.44,
-    },
-    {
-      name: 'Iya Yusuf ',
-      image: 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqZSglLyi88Vc40vZJ7zBJL5Dw_SkX77qZU53o9dMdFQFOFaKlSqe-Ip077HyV4MasXctHObh1rnCAaL6ivXSPv-EG7Qw_z9yhlV_G1P8lbPSaIQB2_rDwro0qGN3uITPP82MmD=w138-h138-n-k-no',
-    //   tags: ['EXPLORE', 'AMALA', 'EWEDU'],
-    //   time: '27 - 37 mins',
-    //   rating: 4.22,
-    },
   {
-    name: 'UniGate\'s Foods',
+    name: 'Item 7',
+    image: 'https://item7.vercel.app/assets/Item7-gupESEli.png',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20item%207,%20to%20be%20delivered%20to%20-'
+  },
+  {
+    name: 'BOA',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
-    // tags: ['AFRICAN', 'CHICKEN', 'EVERY CITIZEN MUST COLLECT'],
-    // time: '31 - 41 mins',
-    // rating: 4.12,
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20BOA,%20to%20be%20delivered%20to%20-'
   },
   {
-    name: 'The Place Foods',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
-  },
-  {
-    name: 'Dope Spag',
-    image: 'https://i.pinimg.com/736x/23/7b/80/237b80be2412c1a95b0a5c20a025c432.jpg',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
-  },
-  {
-    name: 'Xtra Plate',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjQ9PNISxcFkqxDjCAGcDDuF7dItNV0iEBNg&s',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
-  },
-  {
-    name: 'Sunaj Restaurant',
+    name: 'SUNAJ',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD4c38CIJsnLH7ZAKobdJUx3-PncMtSdZ-1Q&s',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20SUNAJ,%20to%20be%20delivered%20to%20-'
+  },
+  {
+    name: 'Unigate Foods',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Unigate%20Foods,%20to%20be%20delivered%20to%20-'
+  },
+  {
+    name: 'Fruitos Dome',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-Lo8ebAv75IQQiPhqUwhPmoC3rRE9NhLzmipTAUlTIniq9rJNEXLxYlXulkep5FSUmdqj&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Fruitos%20Dome,%20to%20be%20delivered%20to%20-'
   },
   {
     name: 'Shawarma Central',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIXfdsgKW-ytZ8qf7cfnNBSruO-E-Gi3b4RlRoC2s9Sx_baoDQHm-7vLNqlA4pjVO-danu_A&s',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Sharwarma%20Central,%20to%20be%20delivered%20to-'
   },
   {
-    name: 'Cold Stone Creamery',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSeiPoZ4SS7CYjjNaKlvdsl-bjiSJ2sxewjgxFYtoQJD-K1oHijJCPijHtAYPcMenYYuxnSQ&s',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
+    name: 'The Place',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20The%20Place,%20to%20be%20delivered%20to-'
   },
   {
-    name: 'Domino\'s Pizza',
+    name: 'Iya Yusuf',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMUal01AaJESvCpTL-klt6GxAmIJF8X6au3WtYNPomWcropUMj4HkW7hrhs9vuGjuMuTodsQ&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Iya%20Yusuf%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Dope Spag',
+    image: 'https://i.pinimg.com/736x/23/7b/80/237b80be2412c1a95b0a5c20a025c432.jpg',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Dope%20Spag%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Xtra Plate',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjQ9PNISxcFkqxDjCAGcDDuF7dItNV0iEBNg&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Xtra%20Plate%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'T&K',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVpEur9-q3QP2sd-owD1R3NIbqxMfSAQMLw&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20T&K%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'KFC',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKIqQRuuc98bqOELolmgcz83vVrgyaD7xGqA&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20KFC%20to%20be%20delivered%20to-'
+  },
+  {
+    name: "Domino's Pizza",
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXQk31gDfgpn2GLYYeuCNYd3PHCfrHVje2ei_qxNV3tOnx2VNYoHoHlHU&s',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Domino%E2%80%99s%20Pizza%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Coldstone Creamery',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSeiPoZ4SS7CYjjNaKlvdsl-bjiSJ2sxewjgxFYtoQJD-K1oHijJCPijHtAYPcMenYYuxnSQ&s',
-    // tags: ['CHICKEN', 'FASTFOOD', 'KFC'],
-    // time: '18 - 28 mins',
-    // rating: 4.19,
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Coldstone%20Creamery%20to%20be%20delivered%20to-'
   }
 ];
+
 const Explore = () => {
   return (
-    <section className="px-4 md:px-10 lg:px-20 py-10">
-      <h2 className="text-xl md:text-2xl font-bold mb-6">Ilorin Restaurants</h2>
-      {/* <div className="flex flex-wrap gap-4 justify-between"> */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-
-        {restaurants.map((restaurant, index) => (
-          <a
-            key={index}
-            href="https://wa.me/message/5QWMCDR63QNVL1"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition w-full sm:w-full"
-          >
-            <div className="relative h-32 md:h-40 w-full">
-              <img
-                src={restaurant.image}
-                alt={restaurant.name}
-                className="w-full h-full object-cover"
-              />
-              {restaurant.preorder && (
-                <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
-                  Pre-order
-                </span>
-              )}
-            </div>
-            <div className="p-3">
-              <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
-                {restaurant.name}
-              </h3>
-              <div className="flex flex-wrap gap-1 mt-2 text-[11px]">
-                {/* You can show tags here if needed */}
-              </div>
-              <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
-                {/* Optional rating */}
-                {/* <span>{restaurant.rating?.toFixed(2)}</span>
-                <AiFillStar className="ml-1" /> */}
-              </div>
-            </div>
-          </a>
-        ))}
+    <section className="animate-fadeIn">
+      {/* Animated Header */}
+      <div className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white relative overflow-hidden">
+        <div className="absolute inset-0  bg-opacity-20"></div>
+        <div className="relative px-4 md:px-10 lg:px-20 py-8 transform transition-all duration-700 animate-slideInDown">
+          <div className="flex items-center gap-3 mb-4">
+            <MdRestaurant className="w-8 h-8 animate-bounce" />
+            <h1 className="text-2xl md:text-3xl font-bold">Food Delivery</h1>
+          </div>
+          <p className="text-red-100 text-sm md:text-base opacity-90">
+            Delicious meals from Ilorin's best restaurants, delivered fresh to your doorstep
+          </p>
+        </div>
       </div>
+
+      {/* Main Content */}
+      <div className="wrapper px-4 md:px-10 lg:px-20 py-10 transform transition-all duration-500 animate-slideInUp">
+        <h2 className="text-xl md:text-2xl font-bold mb-6 text-gray-800 animate-fadeInLeft">
+          Ilorin Restaurants
+        </h2>
+        
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {restaurants.map((restaurant, index) => (
+            <a
+              key={index}
+              href={restaurant.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 w-full animate-fadeInUp group"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+                opacity: 0,
+                animation: `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`
+              }}
+            >
+              <div className="relative h-32 md:h-40 w-full overflow-hidden">
+                <img
+                  src={restaurant.image}
+                  alt={restaurant.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {restaurant.preorder && (
+                  <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full animate-pulse">
+                    Pre-order
+                  </span>
+                )}
+              </div>
+              
+              <div className="p-3 relative">
+                <h3 className="text-md md:text-lg font-semibold text-gray-800 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
+                  {restaurant.name}
+                </h3>
+                
+                <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
+                  {restaurant.rating && (
+                    <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
+                      <span className="font-medium">{restaurant.rating.toFixed(2)}</span>
+                      <AiFillStar className="animate-pulse" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-5 transition-all duration-300 rounded-lg"></div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.8s ease-out;
+        }
+
+        .animate-slideInDown {
+          animation: slideInDown 0.7s ease-out;
+        }
+
+        .animate-slideInUp {
+          animation: slideInUp 0.6s ease-out 0.2s both;
+        }
+
+        .animate-fadeInLeft {
+          animation: fadeInLeft 0.6s ease-out 0.3s both;
+        }
+
+        .animate-fadeInUp {
+          opacity: 0;
+        }
+      `}</style>
     </section>
   );
 };
 
 export default Explore;
-
-
-
-
-        // {restaurants.map((restaurant, index) => (
-        //     <div key={index} className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition w-full sm:w-full ">
-        //         <div className="relative h-32 md:h-40 w-full">
-        //             <img
-        //             src={restaurant.image}
-        //             alt={restaurant.name}
-        //             className="w-full h-full object-cover"
-        //             />
-        //             {restaurant.preorder && (
-        //             <span className="absolute bottom-2 right-2 bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
-        //                 Pre-order
-        //             </span>
-        //             )}
-        //         </div>
-        //         <div className="p-3">
-        //             <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
-        //             {restaurant.name}
-        //             </h3>
-        //             {/* <div className="flex items-center text-xs text-gray-500 mt-1 gap-1">
-        //             <BsClock /> <span>{restaurant.time}</span>
-        //             </div> */}
-        //             <div className="flex flex-wrap gap-1 mt-2 text-[11px]">
-        //             {/* {restaurant.tags.map((tag, i) => (
-        //                 <span
-        //                 key={i}
-        //                 className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
-        //                 >
-        //                 {tag}
-        //                 </span>
-        //             ))} */}
-        //             </div>
-        //             <div className="flex items-center justify-end mt-2 text-yellow-500 text-sm">
-        //             {/* <span>{restaurant.rating.toFixed(2)}</span> */}
-        //             {/* <AiFillStar className="ml-1" /> */}
-        //             </div>
-        //         </div>
-        //     </div>
-        // ))}
