@@ -14,14 +14,6 @@ const Footer = () => {
             />
             <p className="mt-6 text-sm">
               Order Food from Your Favorite restaurants like Item 7, BOA , KFC, The Place, etc. with us & Also Deliver Your Packages as a business Owner here in Ilorin Cheaper, Faster and Reliable
-
-              🎯Mission 
-              Accessible & No #1 Riders in Ilorin that Brings you Food & Deliver Packages for Your Businesses and Never Let You Down!
-
-              🎯 Vision 
-              Lifestyle Comfort for Individuals and Convenience for Businesses by delivering Food and Everyday essentials with Unmatched Speed and Reliability.
-
-            🎯Core Value: Speed, Loyalty, Time Value & Reliability
             </p>
           </div>
           <div className="flex-1 flex md:flex-row flex-col items-start md:justify-end gap-5 md:gap-20">
