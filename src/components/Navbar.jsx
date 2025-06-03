@@ -63,7 +63,7 @@
 
 
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FiMenu, FiSearch, FiX } from "react-icons/fi"
 import { MdRestaurantMenu, MdFeedback, MdChecklist, MdDeliveryDining } from 'react-icons/md'
@@ -72,12 +72,32 @@ import { useSearch } from '../SearchContext' // Import the search context
 
 
 const Navbar = () => {
+    const navbarRef = useRef(null)
   const [open, setOpen] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const { searchQuery, setSearchQuery } = useSearch() // Use search context
 
+useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+            setOpen(false)
+        }
+    }
 
+    if (open) {
+        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('touchstart', handleClickOutside) // For mobile
+    }
+
+    return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+        document.removeEventListener('touchstart', handleClickOutside)
+    }
+}, [open])
+useEffect(() => {
+    setOpen(false)
+}, [location.pathname])
     const navItems = [
         {
             path: '/foods',
@@ -124,7 +144,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
+            <nav ref={navbarRef}  className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
                 <div className="flex items-center justify-between px-2 md:px-16 lg:px-24 xl:px-32 py-3">
                     <button 
                         onClick={() => handleNavigation('/foods')} 
