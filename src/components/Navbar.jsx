@@ -63,6 +63,206 @@
 
 
 
+// import { useEffect, useRef, useState } from "react"
+// import { useNavigate, useLocation } from 'react-router-dom'
+// import { FiMenu, FiSearch, FiX } from "react-icons/fi"
+// import { MdRestaurantMenu, MdFeedback, MdChecklist, MdDeliveryDining } from 'react-icons/md'
+// import handy from '../assets/Handy_logo1.png'
+// import { useSearch } from '../SearchContext' // Import the search context
+
+
+// const Navbar = () => {
+//     const navbarRef = useRef(null)
+//   const [open, setOpen] = useState(false)
+//     const navigate = useNavigate()
+//     const location = useLocation()
+//     const { searchQuery, setSearchQuery } = useSearch() // Use search context
+
+// useEffect(() => {
+//     const handleClickOutside = (event) => {
+//         if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+//             setOpen(false)
+//         }
+//     }
+
+//     if (open) {
+//         document.addEventListener('mousedown', handleClickOutside)
+//         document.addEventListener('touchstart', handleClickOutside) // For mobile
+//     }
+
+//     return () => {
+//         document.removeEventListener('mousedown', handleClickOutside)
+//         document.removeEventListener('touchstart', handleClickOutside)
+//     }
+// }, [open])
+
+// useEffect(() => {
+//     setOpen(false)
+// }, [location.pathname])
+//     const navItems = [
+//         {
+//             path: '/foods',
+//             icon: MdRestaurantMenu,
+//             label: 'Foods'
+//         },
+//         {
+//             path: '/logistics',
+//             icon: MdDeliveryDining,
+//             label: 'Logistics'
+//         },
+//         {
+//             path: '/errands',
+//             icon: MdChecklist,
+//             label: 'Errands'
+//         },
+//         {
+//             path: '/feedback',
+//             icon: MdFeedback,
+//             label: 'Feedback'
+//         }
+//     ]
+
+//     const handleNavigation = (path) => {
+//         navigate(path)
+//         setOpen(false) // Close mobile menu after navigation
+//     }
+
+//     const isActive = (path) => {
+//         if (path === '/foods') {
+//             return location.pathname === '/' || location.pathname === '/foods'
+//         }
+//         return location.pathname === path
+//     }
+
+    
+//     const handleSearchChange = (e) => {
+//         setSearchQuery(e.target.value)
+//     }
+
+//     const clearSearch = () => {
+//         setSearchQuery('')
+//     }
+
+//     return (
+//         <>
+//             <nav ref={navbarRef}  className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
+//                 <div className="flex items-center justify-between px-2 md:px-16 lg:px-24 xl:px-32 py-3">
+//                     <button 
+//                         onClick={() => handleNavigation('/foods')} 
+//                         className="text-3xl font-bold text-red-500"
+//                     >
+//                         <img className="h-16 w-48 ml-[-10px] object-cover" src={handy} alt="Handy logo" />
+//                     </button>
+
+//                     {/* Desktop Menu */}
+//                     <div className="hidden sm:flex items-center gap-8">
+//                         {navItems.map((item) => {
+//                             const IconComponent = item.icon
+//                             const active = isActive(item.path)
+                            
+//                             return (
+//                                 <button 
+//                                     key={item.path}
+//                                     onClick={() => handleNavigation(item.path)}
+//                                     className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-red-50 ${
+//                                         active 
+//                                             ? 'text-red-600 bg-red-50 font-semibold' 
+//                                             : 'text-gray-700 hover:text-red-600'
+//                                     }`}
+//                                 >
+//                                     <IconComponent className={`w-5 h-5 ${active ? 'text-red-600' : 'text-gray-500'}`} />
+//                                     <span>{item.label}</span>
+//                                 </button>
+//                             )
+//                         })}
+
+//                         {/* Search Box - Now active */}
+//                         <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full relative">
+//                             <input 
+//                                 className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" 
+//                                 type="text" 
+//                                 placeholder="Search restaurants..." 
+//                                 value={searchQuery}
+//                                 onChange={handleSearchChange}
+//                             />
+//                             {searchQuery ? (
+//                                 <button 
+//                                     onClick={clearSearch}
+//                                     className="text-gray-400 hover:text-red-500 transition-colors"
+//                                 >
+//                                     <FiX className="w-4 h-4" />
+//                                 </button>
+//                             ) : (
+//                                 <FiSearch className="text-red-500" />
+//                             )}
+//                         </div>
+//                     </div>
+
+//                     {/* Mobile Menu Toggle */}
+//                     <button onClick={() => setOpen(!open)} aria-label="Menu" className="sm:hidden">
+//                         {open ? (
+//                             <FiX className="w-6 h-6 text-red-600" />
+//                         ) : (
+//                             <FiMenu className="w-6 h-6 text-red-600" />
+//                         )}
+//                     </button>
+//                 </div>
+
+//                 {/* Mobile Menu */}
+//                 {open && (
+//                     <div className="sm:hidden bg-white shadow-md py-4 flex flex-col items-start gap-3 px-5 text-sm border-t border-gray-200">
+//                         {navItems.map((item) => {
+//                             const IconComponent = item.icon
+//                             const active = isActive(item.path)
+                            
+//                             return (
+//                                 <button 
+//                                     key={item.path}
+//                                     onClick={() => handleNavigation(item.path)}
+//                                     className={`flex items-center gap-3 w-full py-3 px-3 rounded-lg transition-all duration-200 ${
+//                                         active 
+//                                             ? 'text-red-600 bg-red-50 font-semibold' 
+//                                             : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
+//                                     }`}
+//                                 >
+//                                     <IconComponent className={`w-5 h-5 ${active ? 'text-red-600' : 'text-gray-500'}`} />
+//                                     <span>{item.label}</span>
+//                                 </button>
+//                             )
+//                         })}
+                        
+//                          {/* Mobile Search - Now active */}
+//                         <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full w-full mt-2 relative">
+//                             <input 
+//                                 className="py-2 w-full bg-transparent outline-none placeholder-gray-500" 
+//                                 type="text" 
+//                                 placeholder="Search restaurants..." 
+//                                 value={searchQuery}
+//                                 onChange={handleSearchChange}
+//                             />
+//                             {searchQuery ? (
+//                                 <button 
+//                                     onClick={clearSearch}
+//                                     className="text-gray-400 hover:text-red-500 transition-colors"
+//                                 >
+//                                     <FiX className="w-4 h-4" />
+//                                 </button>
+//                             ) : (
+//                                 <FiSearch className="text-red-500" />
+//                             )}
+//                         </div>
+//                     </div>
+//                 )}
+//             </nav>
+
+//             {/* Spacer div to offset fixed navbar height */}
+//             <div className="h-[70px] sm:h-[80px]"></div>
+//         </>
+//     )
+// }
+
+// export default Navbar
+
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation } from 'react-router-dom'
 import { FiMenu, FiSearch, FiX } from "react-icons/fi"
@@ -70,34 +270,37 @@ import { MdRestaurantMenu, MdFeedback, MdChecklist, MdDeliveryDining } from 'rea
 import handy from '../assets/Handy_logo1.png'
 import { useSearch } from '../SearchContext' // Import the search context
 
-
 const Navbar = () => {
     const navbarRef = useRef(null)
-  const [open, setOpen] = useState(false)
+    const desktopSearchRef = useRef(null)
+    const mobileSearchRef = useRef(null)
+    const [open, setOpen] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
     const { searchQuery, setSearchQuery } = useSearch() // Use search context
 
-useEffect(() => {
-    const handleClickOutside = (event) => {
-        if (navbarRef.current && !navbarRef.current.contains(event.target)) {
-            setOpen(false)
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+                setOpen(false)
+            }
         }
-    }
 
-    if (open) {
-        document.addEventListener('mousedown', handleClickOutside)
-        document.addEventListener('touchstart', handleClickOutside) // For mobile
-    }
+        if (open) {
+            document.addEventListener('mousedown', handleClickOutside)
+            document.addEventListener('touchstart', handleClickOutside) // For mobile
+        }
 
-    return () => {
-        document.removeEventListener('mousedown', handleClickOutside)
-        document.removeEventListener('touchstart', handleClickOutside)
-    }
-}, [open])
-useEffect(() => {
-    setOpen(false)
-}, [location.pathname])
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('touchstart', handleClickOutside)
+        }
+    }, [open])
+
+    useEffect(() => {
+        setOpen(false)
+    }, [location.pathname])
+
     const navItems = [
         {
             path: '/foods',
@@ -133,18 +336,37 @@ useEffect(() => {
         return location.pathname === path
     }
 
-    
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value)
+        // Scroll to top when user starts typing
+        if (e.target.value) {
+            scrollToTop()
+        }
+    }
+
+    const handleSearchKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            // Blur the input to close keyboard
+            e.target.blur()
+            // Close mobile menu if open
+            setOpen(false)
+            // Scroll to top
+            scrollToTop()
+        }
     }
 
     const clearSearch = () => {
         setSearchQuery('')
+        scrollToTop()
     }
 
     return (
         <>
-            <nav ref={navbarRef}  className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
+            <nav ref={navbarRef} className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
                 <div className="flex items-center justify-between px-2 md:px-16 lg:px-24 xl:px-32 py-3">
                     <button 
                         onClick={() => handleNavigation('/foods')} 
@@ -175,14 +397,16 @@ useEffect(() => {
                             )
                         })}
 
-                        {/* Search Box - Now active */}
+                        {/* Desktop Search Box */}
                         <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full relative">
                             <input 
+                                ref={desktopSearchRef}
                                 className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" 
                                 type="text" 
                                 placeholder="Search restaurants..." 
                                 value={searchQuery}
                                 onChange={handleSearchChange}
+                                onKeyDown={handleSearchKeyDown}
                             />
                             {searchQuery ? (
                                 <button 
@@ -230,14 +454,16 @@ useEffect(() => {
                             )
                         })}
                         
-                         {/* Mobile Search - Now active */}
+                        {/* Mobile Search */}
                         <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full w-full mt-2 relative">
                             <input 
+                                ref={mobileSearchRef}
                                 className="py-2 w-full bg-transparent outline-none placeholder-gray-500" 
                                 type="text" 
                                 placeholder="Search restaurants..." 
                                 value={searchQuery}
                                 onChange={handleSearchChange}
+                                onKeyDown={handleSearchKeyDown}
                             />
                             {searchQuery ? (
                                 <button 
