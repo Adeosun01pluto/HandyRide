@@ -411,7 +411,7 @@ const Explore = () => {
                 <div className="text-red-500/80 flex items-center justify-start mt-2 text-sm">
                   {restaurant.deliveryAmount && (
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
-                      <span className='flex items-center'><MdDeliveryDining /> <span>from | </span></span>
+                      <span className='flex items-center gap-2'><MdDeliveryDining /> <span>FROM | </span></span>
                       <span className="font-bold">₦{restaurant.deliveryAmount}</span>
                       {/* <AiFillStar className="animate-pulse" /> */}
                     </div>
