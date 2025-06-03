@@ -9,6 +9,8 @@ import Home from './pages/Home'
 import LogisticsPage from './pages/LogisticsPage'
 import ErrandsPage from './pages/ErrandsPage'
 import FeedbackPage from './pages/FeedbackPage'
+import { SearchProvider } from '../src/SearchContext'
+
 
 // ScrollToTop component inside App.js
 function ScrollToTop() {
@@ -27,21 +29,24 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <ScrollToTop />
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/foods" element={<Home />} />
-          <Route path="/logistics" element={<LogisticsPage />} />
-          <Route path="/errands" element={<ErrandsPage />} />
-          <Route path="/feedback" element={<FeedbackPage />} />
-        </Routes>
-        <Footer />
-        <Bottombar />
-      </div>
-    </Router>
+    <SearchProvider>
+
+      <Router>
+        <div className="App">
+          <ScrollToTop />
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/foods" element={<Home />} />
+            <Route path="/logistics" element={<LogisticsPage />} />
+            <Route path="/errands" element={<ErrandsPage />} />
+            <Route path="/feedback" element={<FeedbackPage />} />
+          </Routes>
+          <Footer />
+          <Bottombar />
+        </div>
+      </Router>
+    </SearchProvider>
   )
 }
 

@@ -68,11 +68,15 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { FiMenu, FiSearch, FiX } from "react-icons/fi"
 import { MdRestaurantMenu, MdFeedback, MdChecklist, MdDeliveryDining } from 'react-icons/md'
 import handy from '../assets/Handy_logo1.png'
+import { useSearch } from '../SearchContext' // Import the search context
+
 
 const Navbar = () => {
-    const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
     const navigate = useNavigate()
     const location = useLocation()
+    const { searchQuery, setSearchQuery } = useSearch() // Use search context
+
 
     const navItems = [
         {
@@ -109,6 +113,15 @@ const Navbar = () => {
         return location.pathname === path
     }
 
+    
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value)
+    }
+
+    const clearSearch = () => {
+        setSearchQuery('')
+    }
+
     return (
         <>
             <nav className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
@@ -142,19 +155,26 @@ const Navbar = () => {
                             )
                         })}
 
-                        {/* Search Box */}
-                        {/* <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
-                            <input className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search services" />
-                            <FiSearch className="text-red-500" />
-                        </div> */}
-
-                        {/* Cart Icon */}
-                        {/* <div className="relative cursor-pointer">
-                            <svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M.583.583h2.333l1.564 7.81a1.17 1.17 0 0 0 1.166.94h5.67a1.17 1.17 0 0 0 1.167-.94l.933-4.893H3.5m2.333 8.75a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0m6.417 0a.583.583 0 1 1-1.167 0 .583.583 0 0 1 1.167 0" stroke="red" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            <button className="absolute -top-2 -right-3 text-xs text-white bg-red-500 w-[18px] h-[18px] rounded-full">3</button>
-                        </div> */}
+                        {/* Search Box - Now active */}
+                        <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full relative">
+                            <input 
+                                className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500" 
+                                type="text" 
+                                placeholder="Search restaurants..." 
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                            />
+                            {searchQuery ? (
+                                <button 
+                                    onClick={clearSearch}
+                                    className="text-gray-400 hover:text-red-500 transition-colors"
+                                >
+                                    <FiX className="w-4 h-4" />
+                                </button>
+                            ) : (
+                                <FiSearch className="text-red-500" />
+                            )}
+                        </div>
                     </div>
 
                     {/* Mobile Menu Toggle */}
@@ -190,11 +210,26 @@ const Navbar = () => {
                             )
                         })}
                         
-                        {/* Mobile Search */}
-                        {/* <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full w-full mt-2">
-                            <input className="py-2 w-full bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search services" />
-                            <FiSearch className="text-red-500" />
-                        </div> */}
+                         {/* Mobile Search - Now active */}
+                        <div className="flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full w-full mt-2 relative">
+                            <input 
+                                className="py-2 w-full bg-transparent outline-none placeholder-gray-500" 
+                                type="text" 
+                                placeholder="Search restaurants..." 
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                            />
+                            {searchQuery ? (
+                                <button 
+                                    onClick={clearSearch}
+                                    className="text-gray-400 hover:text-red-500 transition-colors"
+                                >
+                                    <FiX className="w-4 h-4" />
+                                </button>
+                            ) : (
+                                <FiSearch className="text-red-500" />
+                            )}
+                        </div>
                     </div>
                 )}
             </nav>

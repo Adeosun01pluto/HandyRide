@@ -145,11 +145,13 @@
 
 
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsClock } from 'react-icons/bs';
 import { FaShippingFast } from 'react-icons/fa';
 import { MdRestaurant } from 'react-icons/md';
+import { useSearch } from '../SearchContext' // Import the search context
+
 
 const restaurants = [
   {
@@ -235,10 +237,73 @@ const restaurants = [
     deliveryAmount:"500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSeiPoZ4SS7CYjjNaKlvdsl-bjiSJ2sxewjgxFYtoQJD-K1oHijJCPijHtAYPcMenYYuxnSQ&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Coldstone%20Creamery%20to%20be%20delivered%20to-'
+  },
+   {
+    name: 'Chronicles',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Chronicles%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Amala Place',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Amala%20Place%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Chops Central',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Chops%20Central%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'BQ Cuisine',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20BQ%20Cuisine%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Nutri C',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Nutri%20C%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Spag City',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Spag%20City%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Bookies Kitchen',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Bookies%20Kitchen%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Wooshies',
+    deliveryAmount:"500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Wooshies%20to%20be%20delivered%20to-'
   }
 ];
 
 const Explore = () => {
+    const fallbackImage = 'https://via.placeholder.com/300x200?text=No+Image';
+    const { searchQuery } = useSearch() // Use search context
+       // Filter restaurants based on search query
+    const filteredRestaurants = useMemo(() => {
+        if (!searchQuery.trim()) {
+            return restaurants
+        }
+        
+        return restaurants.filter(restaurant =>
+            restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (restaurant.cuisine && restaurant.cuisine.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            (restaurant.location && restaurant.location.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
+    }, [restaurants, searchQuery])
+
   return (
     <section className="animate-fadeIn">
       {/* Animated Header */}
@@ -257,12 +322,25 @@ const Explore = () => {
 
       {/* Main Content */}
       <div className="wrapper px-4 md:px-10 lg:px-20 pt-3 pb-10 transform transition-all duration-500 animate-slideInUp">
-        <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800 animate-fadeInLeft">
-          Ilorin Restaurants
-        </h2>
-        
+        {/* Search Results Header */}
+          <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-800 animate-fadeInLeft">
+            {searchQuery ? `Search Results for "${searchQuery}"` : 'Ilorin Restaurants'}
+          </h2>
+        {/* Search Results Count */}
+        {searchQuery && (
+            <p className="text-gray-600 mb-4">
+                {filteredRestaurants.length} restaurant{filteredRestaurants.length !== 1 ? 's' : ''} found
+            </p>
+        )}
+        {/* No Results Message */}
+                {searchQuery && filteredRestaurants.length === 0 && (
+                    <div className="text-center py-12">
+                        <MdRestaurant className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-600 mb-2">No restaurants found</h3>
+                        <p className="text-gray-500 mb-4">Try searching with different keywords</p>                    </div>
+                )}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {restaurants.map((restaurant, index) => (
+          {filteredRestaurants.map((restaurant, index) => (
             <a
               key={index}
               href={restaurant.whatsappLink}
@@ -277,7 +355,7 @@ const Explore = () => {
             >
               <div className="relative h-32 md:h-40 w-full overflow-hidden">
                 <img
-                  src={restaurant.image}
+                  src={restaurant.image || fallbackImage}
                   alt={restaurant.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
