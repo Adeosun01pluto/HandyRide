@@ -149,7 +149,7 @@ import React, { useMemo } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsClock } from 'react-icons/bs';
 import { FaShippingFast } from 'react-icons/fa';
-import { MdRestaurant } from 'react-icons/md';
+import { MdDeliveryDining, MdRestaurant } from 'react-icons/md';
 import { useSearch } from '../SearchContext' // Import the search context
 
 
@@ -285,6 +285,42 @@ const restaurants = [
     deliveryAmount:"500",
     image: '',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Wooshies%20to%20be%20delivered%20to-'
+  },
+   {
+    name: 'The Sidney',
+    deliveryAmount: "500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20The%20Sidney%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Obodo Restaurant',
+    deliveryAmount: "500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Obodo%20Restaurant%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Pizza Jungle',
+    deliveryAmount: "500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Pizza%20Jungle%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Chicken Republic',
+    deliveryAmount: "500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Chicken%20Republic%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Kilimanjaro',
+    deliveryAmount: "500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Kilimanjaro%20to%20be%20delivered%20to-'
+  },
+  {
+    name: 'Rookiesharms',
+    deliveryAmount: "500",
+    image: '',
+    whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Rookiesharms%20to%20be%20delivered%20to-'
   }
 ];
 
@@ -375,7 +411,7 @@ const Explore = () => {
                 <div className="text-red-500/80 flex items-center justify-start mt-2 text-sm">
                   {restaurant.deliveryAmount && (
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
-                      <span>Delivery From</span>
+                      <span><MdDeliveryDining /> </span>
                       <span className="font-bold">₦{restaurant.deliveryAmount}</span>
                       {/* <AiFillStar className="animate-pulse" /> */}
                     </div>
