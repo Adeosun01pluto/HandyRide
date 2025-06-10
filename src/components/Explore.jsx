@@ -7,7 +7,7 @@ import { useSearch } from '../SearchContext' // Import the search context
 const restaurants = [
   {
     name: 'Item 7',
-    location: 'Oke Odo',
+    location: 'Near You',
     operatingHours: '9am to 10pm',
     deliveryAmount: "₦500 to ₦800",
     image: 'https://item7.vercel.app/assets/Item7-gupESEli.png',
