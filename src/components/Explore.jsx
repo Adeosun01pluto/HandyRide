@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { BsClock } from 'react-icons/bs';
 import { FaShippingFast } from 'react-icons/fa';
-import { MdDeliveryDining, MdRestaurant } from 'react-icons/md';
+import { MdDeliveryDining, MdLocationOn, MdRestaurant } from 'react-icons/md';
 import { useSearch } from '../SearchContext' // Import the search context
 const restaurants = [
   {
@@ -296,6 +296,16 @@ const Explore = () => {
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
                       <span className='flex items-center gap-2'><MdDeliveryDining /> <span>FROM | </span></span>
                       <span className="font-bold">{restaurant.deliveryAmount}</span>
+                      {/* <AiFillStar className="animate-pulse" /> */}
+                    </div>
+                  )}
+                </div>
+                {/* Location */}
+                <div className="text-gray-400 flex items-center justify-start text-sm">
+                  {restaurant.location && (
+                    <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
+                      <span className='flex items-center gap-2'><MdLocationOn /></span>
+                      <span className="">{restaurant.location}</span>
                       {/* <AiFillStar className="animate-pulse" /> */}
                     </div>
                   )}
