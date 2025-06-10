@@ -286,7 +286,7 @@ const Explore = () => {
                 )}
               </div>
               
-              <div className="p-3 relative">
+              <div className="p-2 lg:p-3 relative">
                 <h3 className="text-lg md:text-lg font-bold text-gray-800 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
                   {restaurant.name}
                 </h3>
@@ -304,7 +304,7 @@ const Explore = () => {
                 <div className="text-red-500/80 flex items-center justify-start text-[11px]">
                   {restaurant.deliveryAmount && (
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
-                      <span className='flex items-center gap-2'><MdDeliveryDining /> <span>FROM | </span></span>
+                      <span className='flex items-center gap-1'><MdDeliveryDining /> <span>FROM | </span></span>
                       <span className="font-semibold">{restaurant.deliveryAmount}</span>
                       {/* <AiFillStar className="animate-pulse" /> */}
                     </div>
