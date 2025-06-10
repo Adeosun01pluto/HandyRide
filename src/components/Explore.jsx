@@ -199,9 +199,9 @@ const restaurants = [
   },
   {
     name: 'Xtra Plate',
-    location: 'https://cdn.pixabay.com/photo/2023/01/17/07/59/mossel-dish-7724006_1280.jpg',
-    operatingHours: '',
-    deliveryAmount: "500",
+    location: 'Oke Odo',
+    operatingHours: '9am to 10pm',
+    deliveryAmount: "₦500",
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjQ9PNISxcFkqxDjCAGcDDuF7dItNV0iEBNg&s',
     whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20%20I%20Want%20to%20get%20-%20from%20Xtra%20Plate%20to%20be%20delivered%20to-'
   }
@@ -291,21 +291,21 @@ const Explore = () => {
                   {restaurant.name}
                 </h3>
                 
-                <div className="text-red-500/80 flex items-center justify-start mt-2 text-sm">
-                  {restaurant.deliveryAmount && (
-                    <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
-                      <span className='flex items-center gap-2'><MdDeliveryDining /> <span>FROM | </span></span>
-                      <span className="font-bold">{restaurant.deliveryAmount}</span>
-                      {/* <AiFillStar className="animate-pulse" /> */}
-                    </div>
-                  )}
-                </div>
                 {/* Location */}
-                <div className="text-gray-400 flex items-center justify-start text-sm">
+                <div className="text-gray-400 flex items-center justify-start text-[11px]">
                   {restaurant.location && (
                     <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
                       <span className='flex items-center gap-2'><MdLocationOn /></span>
                       <span className="">{restaurant.location}</span>
+                      {/* <AiFillStar className="animate-pulse" /> */}
+                    </div>
+                  )}
+                </div>
+                <div className="text-red-500/80 flex items-center justify-start text-[11px]">
+                  {restaurant.deliveryAmount && (
+                    <div className="flex items-center gap-1 transform group-hover:scale-110 transition-transform duration-300">
+                      <span className='flex items-center gap-2'><MdDeliveryDining /> <span>FROM | </span></span>
+                      <span className="font-semibold">{restaurant.deliveryAmount}</span>
                       {/* <AiFillStar className="animate-pulse" /> */}
                     </div>
                   )}
