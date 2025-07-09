@@ -10,6 +10,7 @@ import LogisticsPage from './pages/LogisticsPage'
 import ErrandsPage from './pages/ErrandsPage'
 import FeedbackPage from './pages/FeedbackPage'
 import { SearchProvider } from '../src/SearchContext'
+import { Analytics } from "@vercel/analytics/react"
 
 
 // ScrollToTop component inside App.js
@@ -45,6 +46,7 @@ function App() {
           <Footer />
           <Bottombar />
         </div>
+        <Analytics /> 
       </Router>
     </SearchProvider>
   )
