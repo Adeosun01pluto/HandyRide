@@ -462,7 +462,7 @@ const Bottombar = () => {
           - `overflow-hidden` ensures the button hover effects, etc.,
             are clipped by the rounded corners.
         */}
-    <div className="grid h-full w-full grid-cols-4 rounded-xl bg-white dark:bg-neutral-900 overflow-hidden">
+    <div className="grid h-full w-full grid-cols-4 rounded-xl bg-white overflow-hidden">
      {navItems.map((item) => {
       const IconComponent = item.icon
       const active = isActive(item.path)
@@ -472,7 +472,7 @@ const Bottombar = () => {
         key={item.path}
         type="button"
         onClick={() => handleNavigation(item.path)}
-        className={`inline-flex flex-col items-center justify-center w-full h-full hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors duration-150 ease-in-out`}
+        className={`inline-flex flex-col items-center justify-center w-full h-full hover:bg-gray-50 transition-colors duration-150 ease-in-out`}
        >
         <IconComponent
          className={`w-5 h-5 mb-1 transition-colors duration-150 ease-in-out ${

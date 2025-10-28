@@ -52,7 +52,7 @@ const Explore = () => {
         <div className="max-w-7xl mx-auto">
           {/* Results Header */}
           <div className="mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+            <h2 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900">
               {searchQuery ? (
                 <>
                   Results for <span className="text-red-600">"{searchQuery}"</span>
@@ -165,7 +165,7 @@ const Explore = () => {
                 href="https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20want%20to%20order%20from%20a%20restaurant%20not%20listed.%20Restaurant%20name:%20[Please%20specify]%20-%20Food%20items:%20[Please%20specify]%20-%20Delivery%20address:%20[Please%20specify]"
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-white text-red-600 font-bold text-lg py-4 px-8 rounded-full hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl"
+                className="inline-flex items-center gap-3 bg-white text-red-600 font-bold text-sm  md:text-lg py-4 px-8 rounded-full hover:bg-gray-50 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl"
               >
                 <span>Order from Any Restaurant</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

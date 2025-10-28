@@ -300,6 +300,7 @@ const CartPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50/30 pb-12">
       {/* Header Section */}
+      {/* <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm"> */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="px-4 md:px-10 lg:px-20 py-6">
           <div className="max-w-7xl mx-auto">
@@ -350,13 +351,13 @@ const CartPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="px-4 md:px-10 lg:px-20 py-8">
+      <div className="px-2 md:px-10 lg:px-20 py-8">
         <div className=" mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8 w-full">
             {/* Cart Items */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 w-full">
               {items.length === 0 ? (
-                <div className="bg-white rounded-3xl shadow-xl p-12 text-center border border-gray-100">
+                <div className=" bg-white rounded-3xl shadow-xl p-12 text-center border border-gray-100">
                   <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <FiShoppingCart className="w-12 h-12 text-gray-400" />
                   </div>
@@ -374,12 +375,12 @@ const CartPage = () => {
                   {items.map((i, idx) => (
                     <div
                       key={`${i.restaurantId}::${i.id}`}
-                      className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group"
+                      className=" w-full rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group"
                       style={{ animationDelay: `${idx * 0.05}s` }}
                     >
-                      <div className="p-5 md:p-6 flex gap-5 items-center">
+                      <div className="p-3 md:p-6 flex flex-col md:flex-row gap-5 md:items-center">
                         {/* Image */}
-                        <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200">
+                        <div className="relative w-full h-32 md:w-28 md:h-28 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200">
                           <img
                             src={i.image || "https://via.placeholder.com/80x80?text=No+Img"}
                             alt={i.name}
