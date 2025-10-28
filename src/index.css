@@ -1,9 +1,24 @@
-input[type="text"], input[type="search"], textarea, select {
-  font-size: 16px !important;
+/* Stylish Thin Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px; /* for horizontal scrollbar */
 }
 
-@media screen and (max-width: 768px) {
-  input {
-    font-size: 16px !important;
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff4d4d, #d00000);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff6b6b, #c30000);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d00000 transparent;
 }
