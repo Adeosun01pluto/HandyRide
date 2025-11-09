@@ -42,6 +42,7 @@ const Navbar = () => {
 
   const navItems = [
     { path: "/foods", icon: MdRestaurantMenu, label: "Foods" },
+    { path: "/ride", icon: MdDeliveryDining, label: "Ride" },
     { path: "/logistics", icon: MdDeliveryDining, label: "Logistics" },
     { path: "/errands", icon: MdChecklist, label: "Errands" },
     { path: "/feedback", icon: MdFeedback, label: "Feedback" },

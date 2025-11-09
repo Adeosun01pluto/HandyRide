@@ -20,7 +20,15 @@ import OwnerRegister from "./pages/OwnerRegister";
 import OwnerLogin from "./pages/OwnerLogin";
 import AdminLogin from "./pages/AdminLogin";
 import OwnerRoute from './rotues/OwnerRoute';
+import RiderRoute from './routes/RiderRoute';
 import OrdersPage from './pages/OrdersPage';
+import RidePage from './pages/RidePage';
+import RideStatusPage from './pages/RideStatusPage';
+import RiderOrdersPage from './pages/RiderOrdersPage';
+import RiderLogin from './pages/RiderLogin';
+import RiderRegister from './pages/RiderRegister';
+import RiderDashboard from './pages/RiderDashboard';
+import RiderVehicleRegister from './pages/RiderVehicleRegister';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -58,8 +66,25 @@ function App() {
               <Route path="/owner-register" element={<OwnerRegister />} />
               <Route path="/owner-login" element={<OwnerLogin />} />
               <Route path="/admin-login" element={<AdminLogin />} />
-              {/* <Route path="/orders" element={<OrdersPage />} /> */}
-
+              <Route path="/ride" element={<RidePage />} />
+              <Route path="/ride-status/:orderId" element={<RideStatusPage />} />
+              <Route path="/rider-orders" element={
+                <RiderRoute>
+                  <RiderOrdersPage />
+                </RiderRoute>
+              } />
+              <Route path="/rider-login" element={<RiderLogin />} />
+              <Route path="/rider-register" element={<RiderRegister />} />
+              <Route path="/rider-dashboard" element={
+                <RiderRoute>
+                  <RiderDashboard />
+                </RiderRoute>
+              } />
+              <Route path="/rider-vehicle-register" element={
+                <RiderRoute>
+                  <RiderVehicleRegister />
+                </RiderRoute>
+              } />
             </Routes>
             <Footer />
             <Bottombar />
