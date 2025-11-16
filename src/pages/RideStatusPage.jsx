@@ -1,121 +1,226 @@
+// src/pages/RideStatusPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BiCamera, BiCheckCircle, BiChevronLeft, BiPhone, BiStar, BiX } from "react-icons/bi";
+import {
+  BiCamera,
+  BiCheckCircle,
+  BiChevronLeft,
+  BiPhone,
+  BiStar,
+  BiX,
+} from "react-icons/bi";
 import { BsCheckCircle, BsShieldCheck } from "react-icons/bs";
 import { MdDirectionsBike, MdDirectionsCar } from "react-icons/md";
 import { GoShieldCheck } from "react-icons/go";
-import { db } from "../lib/firebase";
-import { doc, onSnapshot, updateDoc, serverTimestamp, arrayUnion } from "firebase/firestore";
+import { auth, db } from "../lib/firebase";
+import {
+  doc,
+  onSnapshot,
+  updateDoc,
+  serverTimestamp,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
 
 /* ---- small helpers ---- */
-function currency(n){ if(n==null) return "₦0"; try{ return `₦${Number(n).toLocaleString()}`;}catch{ return `₦${n}`;} }
-function getLocalActive(){ try{ const v=JSON.parse(localStorage.getItem("rideOrder:active")); return v&&typeof v==="object"?v:null;}catch{ return null; } }
-function getClientKeyFor(orderId){
-  if(!orderId) return null;
-  const direct = localStorage.getItem(`rideOrder:${orderId}:clientKey`);
-  if (direct) return direct;
-  const active = getLocalActive();
-  if (active?.id === orderId && active.clientKey) return active.clientKey;
-  return null;
+function currency(n) {
+  if (n == null) return "₦0";
+  try {
+    return `₦${Number(n).toLocaleString()}`;
+  } catch {
+    return `₦${n}`;
+  }
 }
-function clearActive(orderId){ try{ const a=getLocalActive(); if(a?.id===orderId) localStorage.removeItem("rideOrder:active"); }catch{} }
 
-export default function RideStatusPage(){
+const ACTIVE_STATUSES = new Set(["pending", "taken", "paid", "in_progress"]);
+
+export default function RideStatusPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
+  const [riderProfile, setRiderProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [permError, setPermError] = useState("");
-  const [keyError, setKeyError] = useState("");
 
-  // live doc
+  // ---- Require login + derive orderId from user profile if not in URL ----
   useEffect(() => {
-    if (!orderId) {
-      const a = getLocalActive();
-      if (a?.id) navigate(`/ride-status/${a.id}`, { replace: true });
-      return;
-    }
-    const ref = doc(db, "rideOrders", orderId);
-    const unsub = onSnapshot(ref, (snap) => {
-      if (!snap.exists()) { setOrder(null); setLoading(false); return; }
-      const data = { id: snap.id, ...snap.data() };
-      setOrder(data);
-      setLoading(false);
-      setPermError("");
-      // keep lightweight mirror so we can fetch key on refresh
+    (async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
+      // If URL has an orderId, normal flow continues in snapshot effect
+      if (orderId) return;
+
+      // No orderId in URL -> try to get it from user profile
       try {
-        const active = JSON.parse(localStorage.getItem("rideOrder:active") || "null") || {};
-        localStorage.setItem("rideOrder:active", JSON.stringify({
-          ...active,
-          id: data.id, trackingNumber: data.trackingNumber,
-          clientKey: getClientKeyFor(data.id) || active.clientKey || null,
-          status: data.status, pickup: data.pickup,
-          destination: data.destination || data.dropoff,
-          originalFare: data.originalFare, bid: data.bid || null,
-          updatedAt: new Date().toISOString(),
-        }));
-      } catch {}
-      if (["completed","cancelled"].includes(data.status)) clearActive(snap.id);
-    }, (err) => {
-      console.error("onSnapshot error:", err);
-      setPermError("Unable to load ride. Please check your connection.");
-      setLoading(false);
-    });
-    return () => unsub();
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          navigate("/ride", { replace: true });
+          return;
+        }
+        const data = userSnap.data() || {};
+        if (data.activeRideId) {
+          navigate(`/ride-status/${data.activeRideId}`, { replace: true });
+        } else {
+          navigate("/ride", { replace: true });
+        }
+      } catch (err) {
+        console.error("Failed to resolve ride from user profile:", err);
+        navigate("/ride", { replace: true });
+      }
+    })();
   }, [orderId, navigate]);
 
-  const clientKey = getClientKeyFor(orderId || "");
+  // ---- Live ride document subscription ----
   useEffect(() => {
-    if (!clientKey) {
-      setKeyError("This device does not have your ride’s client key. Open on the device used to book.");
-    } else {
-      setKeyError("");
-    }
-  }, [clientKey]);
+    if (!orderId) return; // handled by previous effect
 
-  // all updates must include clientKey and target **allowed** fields
+    const ref = doc(db, "rideOrders", orderId);
+    const unsub = onSnapshot(
+      ref,
+      (snap) => {
+        if (!snap.exists()) {
+          setOrder(null);
+          setLoading(false);
+          return;
+        }
+        const data = { id: snap.id, ...snap.data() };
+        setOrder(data);
+        setLoading(false);
+        setPermError("");
+      },
+      (err) => {
+        console.error("onSnapshot error:", err);
+        setPermError("Unable to load ride. Please check your connection.");
+        setLoading(false);
+      }
+    );
+    return () => unsub();
+  }, [orderId]);
 
+  // 🔄 Sync user profile (activeRide / lastRide) whenever this order changes
+  useEffect(() => {
+    const syncUserProfile = async () => {
+      if (!order) return;
+      const user = auth.currentUser;
+      if (!user) return;
+      // Only sync if this ride belongs to logged-in user
+      if (order.userUid && order.userUid !== user.uid) return;
+
+      const userRef = doc(db, "users", user.uid);
+      const status = order.status;
+
+      try {
+        if (ACTIVE_STATUSES.has(status)) {
+          await updateDoc(userRef, {
+            activeRideId: order.id,
+            activeRideTrackingNumber: order.trackingNumber || null,
+            activeRideStatus: status,
+            updatedAt: serverTimestamp(),
+          });
+        } else {
+          await updateDoc(userRef, {
+            activeRideId: null,
+            activeRideTrackingNumber: null,
+            activeRideStatus: status,
+            lastRideId: order.id,
+            lastRideTrackingNumber: order.trackingNumber || null,
+            lastRideStatus: status,
+            lastRideUpdatedAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+        }
+      } catch (err) {
+        console.error("Failed to sync user ride state:", err);
+      }
+    };
+
+    syncUserProfile();
+  }, [order]);
+
+  // 🔄 Load rider profile (from riders/{uid}) once we know who accepted
+  useEffect(() => {
+    const fetchRider = async () => {
+      if (!order) return;
+
+      const riderUid = order.acceptedByUid || order.riderUid;
+      if (!riderUid) {
+        setRiderProfile(null);
+        return;
+      }
+
+      try {
+        const rRef = doc(db, "riders", riderUid);
+        const rSnap = await getDoc(rRef);
+        if (!rSnap.exists()) {
+          setRiderProfile(null);
+          return;
+        }
+        setRiderProfile({ id: rSnap.id, ...rSnap.data() });
+      } catch (err) {
+        console.error("Failed to load rider profile:", err);
+        setRiderProfile(null);
+      }
+    };
+
+    fetchRider();
+  }, [order]);
+
+  // ---- Firestore updates (user-based, no clientKey / localStorage) ----
   const doUpdate = async (patch) => {
     if (!orderId) throw new Error("No orderId");
-    if (!clientKey) {
-      alert("Missing clientKey on this device.");
-      throw new Error("Missing clientKey");
+
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Please login again.");
+      navigate("/login");
+      throw new Error("Not authenticated");
     }
-    
+
+    // Optional UI guard: ensure this ride belongs to the current user
+    if (order?.userUid && order.userUid !== user.uid) {
+      alert("You are not allowed to modify this ride.");
+      throw new Error("Not owner of ride");
+    }
+
     try {
-      // Include clientKey for verification (must match existing key, won't be changed)
       await updateDoc(doc(db, "rideOrders", orderId), {
         ...patch,
-        clientKey,  // Rules verify this matches the existing key
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
       console.error("Update failed:", error);
       if (error.code === "permission-denied") {
-        alert("Permission denied. Check:\n• Using the same device you booked from\n• ClientKey matches\n• Not editing restricted fields");
+        alert("Permission denied. You cannot modify this ride.");
       }
       throw error;
     }
   };
+
   const isPaid =
     order?.status === "paid" ||
     order?.status === "in_progress" ||
     order?.status === "completed";
   const isCompleted = order?.status === "completed";
-  const hasRider = Boolean(order?.acceptedByUid || order?.rider);
+  const hasRider =
+    Boolean(order?.acceptedByUid || order?.riderUid || riderProfile);
 
   const amount = useMemo(() => {
     if (!order) return 0;
-    if (order.bid?.state === "counter") return order.bid?.current ?? order.originalFare ?? 0;
+    if (order.bid?.state === "counter")
+      return order.bid?.current ?? order.originalFare ?? 0;
     return order.bid?.current ?? order.originalFare ?? 0;
   }, [order]);
 
-  /* ---- actions (note bid.* dotted paths; allowed by rules) ---- */
+  /* ---- actions ---- */
   const handleCancel = async () => {
     if (!window.confirm("Cancel this ride request?")) return;
     await doUpdate({ status: "cancelled" });
-    clearActive(orderId);
     navigate("/ride", { replace: true });
   };
 
@@ -124,27 +229,45 @@ export default function RideStatusPage(){
     await doUpdate({
       status: "paid",
       "bid.state": "accepted",
-      "bid.history": arrayUnion({ by: "user", action: "paid", amount: amount, at: Date.now() }),
+      "bid.history": arrayUnion({
+        by: "user",
+        action: "paid",
+        amount: amount,
+        at: Date.now(),
+      }),
     });
-    // UI will update via snapshot
+    // user profile & UI will update via snapshot
   };
 
   const handleComplete = async () => {
     if (!window.confirm("Mark ride as completed?")) return;
     await doUpdate({
       status: "completed",
-      "bid.history": arrayUnion({ by: "user", action: "completed", at: Date.now() }),
+      "bid.history": arrayUnion({
+        by: "user",
+        action: "completed",
+        at: Date.now(),
+      }),
     });
-    clearActive(orderId);
     navigate("/ride", { replace: true });
   };
 
   const acceptCounter = async () => {
     if (!order?.bid?.current) return;
-    if (!window.confirm(`Accept rider's bid of ${currency(order.bid.current)}?`)) return;
+    if (
+      !window.confirm(
+        `Accept rider's bid of ${currency(order.bid.current)}?`
+      )
+    )
+      return;
     await doUpdate({
       "bid.state": "accepted",
-      "bid.history": arrayUnion({ by: "user", action: "accept-counter", amount: order.bid.current, at: Date.now() }),
+      "bid.history": arrayUnion({
+        by: "user",
+        action: "accept-counter",
+        amount: order.bid.current,
+        at: Date.now(),
+      }),
     });
   };
 
@@ -155,17 +278,53 @@ export default function RideStatusPage(){
       "bid.state": "pending",
       "bid.current": resetTo,
       "bid.counterBy": null,
-      "bid.history": arrayUnion({ by: "user", action: "decline-counter", amount: order.bid?.current ?? 0, at: Date.now() }),
+      "bid.history": arrayUnion({
+        by: "user",
+        action: "decline-counter",
+        amount: order.bid?.current ?? 0,
+        at: Date.now(),
+      }),
     });
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><p>Loading…</p></div>;
-  if (!order) return <div className="min-h-screen flex items-center justify-center"><p>Ride not found</p></div>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading…</p>
+      </div>
+    );
+  if (!order)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Ride not found</p>
+      </div>
+    );
 
   const statusColor =
-    (isCompleted && "bg-green-500") || (isPaid && "bg-blue-500") || (hasRider && !isPaid && "bg-amber-500") || "bg-gray-400";
-  const statusText = isCompleted ? "Completed" : isPaid ? "In Progress" : hasRider ? "Payment Required" : "Finding Rider";
+    (isCompleted && "bg-green-500") ||
+    (isPaid && "bg-blue-500") ||
+    (hasRider && !isPaid && "bg-amber-500") ||
+    "bg-gray-400";
+  const statusText = isCompleted
+    ? "Completed"
+    : isPaid
+    ? "In Progress"
+    : hasRider
+    ? "Payment Required"
+    : "Finding Rider";
 
+  // Prefer riderProfile (loaded from riders collection), fallback to order.rider
+  const rider = riderProfile || order.rider || {};
+  const riderName = rider.name || rider.fullName || "Rider";
+  const riderRating = rider.rating || "5.0";
+  const riderPhoto = rider.photo || rider.profile || null;
+  const riderVehicle =
+    rider.vehicle ||
+    rider.vehicleType ||
+    (order.rideType === "Bike" ? "Bike" : "Car");
+  const riderPlate = rider.plateNumber || rider.vehicleNumber || "ABC-123-XY";
+  const riderColor = rider.color || "#000";
+  const riderPhone = rider.phone || "";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50/20 to-orange-50/30">
@@ -184,7 +343,10 @@ export default function RideStatusPage(){
                 Ride Status
               </div>
               <div className="text-white font-bold text-lg">
-                #{String(order.trackingNumber || order.id).slice(0, 12).toUpperCase()}
+                #
+                {String(order.trackingNumber || order.id)
+                  .slice(0, 12)
+                  .toUpperCase()}
               </div>
             </div>
             <div className="w-10" />
@@ -193,15 +355,10 @@ export default function RideStatusPage(){
       </div>
 
       <div className="max-w-md mx-auto px-4 py-6 space-y-4">
-        {/* Permission / key banners */}
-         {permError ? (
+        {/* Permission banner */}
+        {permError ? (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-800 text-sm">
             {permError}
-          </div>
-        ) : null}
-        {keyError ? (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-800 text-sm">
-            {keyError}
           </div>
         ) : null}
 
@@ -215,9 +372,21 @@ export default function RideStatusPage(){
             {isCompleted && <BiCheckCircle size={28} />}
           </div>
           <div className="flex items-center gap-2 mt-4">
-            <div className={`flex-1 h-1.5 rounded-full ${order?.status ? 'bg-white' : 'bg-white/30'}`} />
-            <div className={`flex-1 h-1.5 rounded-full ${isPaid ? 'bg-white' : 'bg-white/30'}`} />
-            <div className={`flex-1 h-1.5 rounded-full ${isCompleted ? 'bg-white' : 'bg-white/30'}`} />
+            <div
+              className={`flex-1 h-1.5 rounded-full ${
+                order?.status ? "bg-white" : "bg-white/30"
+              }`}
+            />
+            <div
+              className={`flex-1 h-1.5 rounded-full ${
+                isPaid ? "bg-white" : "bg-white/30"
+              }`}
+            />
+            <div
+              className={`flex-1 h-1.5 rounded-full ${
+                isCompleted ? "bg-white" : "bg-white/30"
+              }`}
+            />
           </div>
           <div className="flex justify-between text-xs mt-2 text-white/80">
             <span>Waiting</span>
@@ -229,13 +398,21 @@ export default function RideStatusPage(){
         {/* Counter banner */}
         {order?.bid?.state === "counter" && !isPaid && (
           <div className="bg-white rounded-3xl shadow-xl p-4 border border-amber-200">
-            <div className="text-sm font-semibold mb-2 text-amber-700">Rider proposed a new fare</div>
+            <div className="text-sm font-semibold mb-2 text-amber-700">
+              Rider proposed a new fare
+            </div>
             <div className="flex items-center justify-between mb-3">
               <div className="text-gray-600">
-                Your offer: <span className="font-semibold">{currency(order.bid?.original)}</span>
+                Your offer:{" "}
+                <span className="font-semibold">
+                  {currency(order.bid?.original)}
+                </span>
               </div>
               <div className="text-gray-900">
-                Rider offer: <span className="font-bold">{currency(order.bid?.current)}</span>
+                Rider offer:{" "}
+                <span className="font-bold">
+                  {currency(order.bid?.current)}
+                </span>
               </div>
             </div>
             <div className="flex gap-3">
@@ -255,7 +432,7 @@ export default function RideStatusPage(){
           </div>
         )}
 
-        {/* Rider (locked until paid). If only acceptedBy* present, still show “locked” card */}
+        {/* Rider card */}
         {hasRider ? (
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
             <div className="bg-gradient-to-r from-red-500 to-orange-500 p-4 text-center text-white">
@@ -272,10 +449,16 @@ export default function RideStatusPage(){
                 <div className="relative">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-400 to-orange-400 p-1">
                     <div className="w-full h-full rounded-full bg-white overflow-hidden">
-                      {order.rider?.photo ? (
-                        <img src={order.rider.photo} alt="rider" className="w-full h-full object-cover" />
+                      {isPaid && riderPhoto ? (
+                        <img
+                          src={riderPhoto}
+                          alt="rider"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl">👤</div>
+                        <div className="w-full h-full flex items-center justify-center text-gray-300 text-3xl">
+                          👤
+                        </div>
                       )}
                     </div>
                   </div>
@@ -284,12 +467,17 @@ export default function RideStatusPage(){
 
                 <div>
                   <div className="font-bold text-xl text-gray-900 flex items-center gap-2">
-                    {isPaid ? (order.rider?.name || "Rider") : "Hidden"}
-                    {isPaid && <BsShieldCheck className="text-blue-500" size={18} />}
+                    {isPaid ? riderName : "Hidden"}
+                    {isPaid && (
+                      <BsShieldCheck className="text-blue-500" size={18} />
+                    )}
                   </div>
                   <div className="text-gray-500 text-sm flex items-center gap-1">
-                    <BiStar className="text-amber-400 fill-amber-400" size={16} />
-                    {isPaid ? (order.rider?.rating || "5.0") : "★★★★★"}
+                    <BiStar
+                      className="text-amber-400 fill-amber-400"
+                      size={16}
+                    />
+                    {isPaid ? riderRating : "★★★★★"}
                   </div>
                 </div>
               </div>
@@ -300,26 +488,35 @@ export default function RideStatusPage(){
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md">
                       <BiCamera className="text-gray-700" size={24} />
                     </div>
-                    <span className="text-xs font-medium text-gray-700 mt-1">Photo</span>
+                    <span className="text-xs font-medium text-gray-700 mt-1">
+                      Photo
+                    </span>
                   </button>
                   <button className="flex-1 bg-gray-100 hover:bg-gray-200 rounded-2xl py-4 flex flex-col items-center gap-1 transition-all">
-                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md">💬</div>
-                    <span className="text-xs font-medium text-gray-700 mt-1">Chat</span>
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md">
+                      💬
+                    </div>
+                    <span className="text-xs font-medium text-gray-700 mt-1">
+                      Chat
+                    </span>
                   </button>
                   <a
-                    href={`tel:${order.rider?.phone || ""}`}
+                    href={isPaid && riderPhone ? `tel:${riderPhone}` : undefined}
                     className="flex-1 bg-gray-100 hover:bg-gray-200 rounded-2xl py-4 flex flex-col items-center gap-1 transition-all"
                   >
                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md">
                       <BiPhone className="text-gray-700" size={24} />
                     </div>
-                    <span className="text-xs font-medium text-gray-700 mt-1">Call</span>
+                    <span className="text-xs font-medium text-gray-700 mt-1">
+                      Call
+                    </span>
                   </a>
                 </div>
               ) : (
                 <div className="mb-6 p-4 bg-amber-50 rounded-2xl border border-amber-200">
                   <div className="text-center text-amber-700 text-sm font-medium">
-                    A rider has accepted. Complete payment to unlock full rider details.
+                    A rider has accepted. Complete payment to unlock full rider
+                    details.
                   </div>
                 </div>
               )}
@@ -332,26 +529,43 @@ export default function RideStatusPage(){
                   <div className="space-y-3">
                     <Row label="Type">
                       <span className="font-semibold text-gray-900 flex items-center gap-1">
-                        {order.rideType === "Bike" ? <MdDirectionsBike className="text-red-500" size={18} /> : <MdDirectionsCar className="text-red-500" size={18} />}
-                        {isPaid ? (order.rider?.vehicle || order.rideType) : "Hidden"}
+                        {order.rideType === "Bike" ? (
+                          <MdDirectionsBike
+                            className="text-red-500"
+                            size={18}
+                          />
+                        ) : (
+                          <MdDirectionsCar
+                            className="text-red-500"
+                            size={18}
+                          />
+                        )}
+                        {isPaid ? riderVehicle : "Hidden"}
                       </span>
                     </Row>
                     <Row label="Plate Number">
                       <span className="font-semibold text-gray-900 font-mono">
-                        {isPaid ? (order.rider?.plateNumber || "ABC-123-XY") : "•••-•••-••"}
+                        {isPaid ? riderPlate : "•••-•••-••"}
                       </span>
                     </Row>
                     <Row label="Color">
                       <span className="font-semibold text-gray-900 flex items-center gap-2">
                         {isPaid && (
-                          <span className="w-4 h-4 rounded-full border-2 border-gray-300" style={{ backgroundColor: order.rider?.color || "#000" }} />
+                          <span
+                            className="w-4 h-4 rounded-full border-2 border-gray-300"
+                            style={{
+                              backgroundColor: riderColor,
+                            }}
+                          />
                         )}
-                        {isPaid ? (order.rider?.color || "Black") : "Hidden"}
+                        {isPaid ? riderColor : "Hidden"}
                       </span>
                     </Row>
                     <Row label="Phone">
                       <span className="font-semibold text-gray-900">
-                        {isPaid ? (order.rider?.phone || "+234 ••• ••••") : "•••• •••• ••••"}
+                        {isPaid
+                          ? riderPhone || "+234 ••• ••••"
+                          : "•••• •••• ••••"}
                       </span>
                     </Row>
                   </div>
@@ -361,7 +575,9 @@ export default function RideStatusPage(){
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200">
                     <div className="flex items-center gap-2 text-green-700">
                       <GoShieldCheck size={20} />
-                      <span className="text-sm font-semibold">Verified Rider - ID Confirmed</span>
+                      <span className="text-sm font-semibold">
+                        Verified Rider - ID Confirmed
+                      </span>
                     </div>
                   </div>
                 )}
@@ -374,8 +590,12 @@ export default function RideStatusPage(){
             <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-red-100 to-orange-100 flex items-center justify-center">
               <div className="text-4xl animate-pulse">🔍</div>
             </div>
-            <div className="font-bold text-lg text-gray-900 mb-2">Finding Your Rider</div>
-            <div className="text-gray-500 text-sm">Please wait while we match you with an available rider…</div>
+            <div className="font-bold text-lg text-gray-900 mb-2">
+              Finding Your Rider
+            </div>
+            <div className="text-gray-500 text-sm">
+              Please wait while we match you with an available rider…
+            </div>
             <div className="mt-6 flex justify-center gap-2">
               <Dot delay="0s" />
               <Dot delay="0.2s" />
@@ -396,17 +616,26 @@ export default function RideStatusPage(){
               <div className="flex gap-3">
                 <div className="flex flex-col items-center">
                   <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <div className="w-0.5 flex-1 bg-gray-200 my-1" style={{ minHeight: "20px" }} />
+                  <div
+                    className="w-0.5 flex-1 bg-gray-200 my-1"
+                    style={{ minHeight: "20px" }}
+                  />
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                 </div>
                 <div className="flex-1 space-y-4">
                   <div>
                     <div className="text-xs text-gray-500 mb-1">Pickup</div>
-                    <div className="font-semibold text-gray-900">{order.pickup}</div>
+                    <div className="font-semibold text-gray-900">
+                      {order.pickup}
+                    </div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500 mb-1">Destination</div>
-                    <div className="font-semibold text-gray-900">{order.dropoff || order.destination}</div>
+                    <div className="text-xs text-gray-500 mb-1">
+                      Destination
+                    </div>
+                    <div className="font-semibold text-gray-900">
+                      {order.dropoff || order.destination}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -414,20 +643,38 @@ export default function RideStatusPage(){
 
             {/* Details */}
             <div className="border-t pt-4 space-y-3">
-              <Row label="Time"><span className="font-semibold text-gray-900">{order.time || "ASAP"}</span></Row>
-              <Row label="Passengers"><span className="font-semibold text-gray-900">{order.seats} seat{Number(order.seats) > 1 ? "s" : ""}</span></Row>
-              {order.vibe ? <Row label="Vibe"><span className="font-semibold text-gray-900">{order.vibe}</span></Row> : null}
+              <Row label="Time">
+                <span className="font-semibold text-gray-900">
+                  {order.time || "ASAP"}
+                </span>
+              </Row>
+              <Row label="Passengers">
+                <span className="font-semibold text-gray-900">
+                  {order.seats} seat
+                  {Number(order.seats) > 1 ? "s" : ""}
+                </span>
+              </Row>
+              {order.vibe ? (
+                <Row label="Vibe">
+                  <span className="font-semibold text-gray-900">
+                    {order.vibe}
+                  </span>
+                </Row>
+              ) : null}
             </div>
 
             {/* Amount */}
             <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-4 border border-emerald-200">
               <div className="flex justify-between items-center">
                 <span className="text-emerald-700 font-medium">Amount</span>
-                <span className="text-2xl font-bold text-emerald-700">{currency(amount)}</span>
+                <span className="text-2xl font-bold text-emerald-700">
+                  {currency(amount)}
+                </span>
               </div>
               {order?.bid?.state === "counter" && !isPaid && (
                 <div className="text-xs text-amber-700 mt-1">
-                  Rider sent a counter offer. Accept to pay or decline to wait for another rider.
+                  Rider sent a counter offer. Accept to pay or decline to wait
+                  for another rider.
                 </div>
               )}
             </div>
@@ -457,15 +704,18 @@ export default function RideStatusPage(){
             </button>
           )}
 
-          {hasRider && isPaid && !isCompleted && order.status !== "cancelled" && (
-            <button
-              onClick={handleComplete}
-              className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95"
-            >
-              <BsCheckCircle size={20} />
-              Complete Ride
-            </button>
-          )}
+          {hasRider &&
+            isPaid &&
+            !isCompleted &&
+            order.status !== "cancelled" && (
+              <button
+                onClick={handleComplete}
+                className="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95"
+              >
+                <BsCheckCircle size={20} />
+                Complete Ride
+              </button>
+            )}
 
           {(order.status === "cancelled" || isCompleted) && (
             <button
@@ -489,8 +739,12 @@ function Row({ label, children }) {
     </div>
   );
 }
+
 function Dot({ delay }) {
-  return <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: delay }} />;
+  return (
+    <div
+      className="w-2 h-2 bg-red-500 rounded-full animate-bounce"
+      style={{ animationDelay: delay }}
+    />
+  );
 }
-
-

@@ -1,418 +1,3 @@
-// // src/pages/RestaurantOwnerDashboard.jsx
-// import React, { useEffect, useMemo, useState } from "react";
-// import {
-//   addDoc,
-//   collection,
-//   deleteDoc,
-//   doc,
-//   onSnapshot,
-//   orderBy,
-//   query,
-//   updateDoc,
-// } from "firebase/firestore";
-// import { db } from "../lib/firebase";
-// import { useAuthOwner } from "../hooks/useAuthOwner";
-
-// const emptyForm = { name: "", price: "", description: "", image: "", available: true };
-
-// const RestaurantOwnerDashboard = () => {
-//   const { loading, restaurant } = useAuthOwner();
-//   const [menu, setMenu] = useState([]);
-//   const [form, setForm] = useState(emptyForm);
-//   const [saving, setSaving] = useState(false);
-//   const [msg, setMsg] = useState("");
-//   const [err, setErr] = useState("");
-
-//   // edit state
-//   const [editingId, setEditingId] = useState(null);
-//   const [edit, setEdit] = useState(emptyForm);
-
-//   // load menu realtime for this restaurant
-//   useEffect(() => {
-//     if (!restaurant?.id) return;
-//     const q = query(
-//       collection(db, "restaurants", restaurant.id, "menu"),
-//       orderBy("name")
-//     );
-//     const unsub = onSnapshot(
-//       q,
-//       (snap) => {
-//         setMenu(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-//       },
-//       (e) => setErr(e.message || "Failed to load menu")
-//     );
-//     return () => unsub();
-//   }, [restaurant?.id]);
-
-//   const canAdd = useMemo(
-//     () => form.name && form.price && !isNaN(Number(form.price)),
-//     [form]
-//   );
-
-//   const addMenuItem = async (e) => {
-//     e.preventDefault();
-//     if (!restaurant?.id) return;
-//     setSaving(true);
-//     setMsg("");
-//     setErr("");
-//     try {
-//       await addDoc(collection(db, "restaurants", restaurant.id, "menu"), {
-//         name: form.name.trim(),
-//         price: Number(form.price),
-//         description: form.description || "",
-//         image: form.image || "",
-//         available: !!form.available,
-//       });
-//       setForm(emptyForm);
-//       setMsg("Menu item added!");
-//     } catch (e) {
-//       setErr(e.message || "Failed to add menu item.");
-//     } finally {
-//       setSaving(false);
-//     }
-//   };
-
-//   const startEdit = (row) => {
-//     setEditingId(row.id);
-//     setEdit({
-//       name: row.name || "",
-//       price: row.price || "",
-//       description: row.description || "",
-//       image: row.image || "",
-//       available: !!row.available,
-//     });
-//     setMsg("");
-//     setErr("");
-//   };
-
-//   const cancelEdit = () => {
-//     setEditingId(null);
-//     setEdit(emptyForm);
-//   };
-
-//   const saveEdit = async (id) => {
-//     if (!restaurant?.id) return;
-//     setSaving(true);
-//     setMsg("");
-//     setErr("");
-//     try {
-//       await updateDoc(doc(db, "restaurants", restaurant.id, "menu", id), {
-//         name: edit.name.trim(),
-//         price: Number(edit.price),
-//         description: edit.description || "",
-//         image: edit.image || "",
-//         available: !!edit.available,
-//       });
-//       setMsg("Menu item updated!");
-//       cancelEdit();
-//     } catch (e) {
-//       setErr(e.message || "Failed to update item.");
-//     } finally {
-//       setSaving(false);
-//     }
-//   };
-
-//   const removeItem = async (id) => {
-//     if (!restaurant?.id) return;
-//     setErr("");
-//     setMsg("");
-//     try {
-//       await deleteDoc(doc(db, "restaurants", restaurant.id, "menu", id));
-//       setMsg("Item deleted.");
-//     } catch (e) {
-//       setErr(e.message || "Failed to delete item.");
-//     }
-//   };
-
-//   const toggleAvailability = async (row) => {
-//     if (!restaurant?.id) return;
-//     setErr("");
-//     try {
-//       await updateDoc(doc(db, "restaurants", restaurant.id, "menu", row.id), {
-//         available: !row.available,
-//       });
-//     } catch (e) {
-//       setErr(e.message || "Failed to change availability.");
-//     }
-//   };
-
-//   if (loading) return <div className="px-4 md:px-10 lg:px-20 py-6">Loading…</div>;
-//   if (!restaurant)
-//     return (
-//       <div className="px-4 md:px-10 lg:px-20 py-6">
-//         <p className="text-amber-700">
-//           No confirmed restaurant found for your account yet.
-//         </p>
-//       </div>
-//     );
-
-//   return (
-//     <div className="px-4 md:px-10 lg:px-20 py-6">
-//       <h1 className="text-2xl font-bold mb-2">Restaurant Dashboard</h1>
-//       <p className="text-sm text-gray-600 mb-4">
-//         <b>{restaurant.name}</b> — <code>/r/{restaurant.slug}</code> —{" "}
-//         <span className={restaurant.status === "confirmed" ? "text-green-700" : "text-amber-700"}>
-//           {restaurant.status}
-//         </span>
-//       </p>
-
-//       {msg && <p className="mb-3 text-sm text-green-700">{msg}</p>}
-//       {err && <p className="mb-3 text-sm text-red-600">{err}</p>}
-
-//       {/* Add menu item */}
-//       <div className="bg-white rounded shadow p-4 mb-6">
-//         <h2 className="font-semibold mb-3">Add New Menu Item</h2>
-//         <form onSubmit={addMenuItem} className="grid md:grid-cols-2 gap-3">
-//           <input
-//             value={form.name}
-//             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-//             placeholder="Name"
-//             className="border p-2 rounded"
-//             required
-//           />
-//           <input
-//             type="number"
-//             value={form.price}
-//             onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
-//             placeholder="Price (₦)"
-//             className="border p-2 rounded"
-//             required
-//           />
-//           <input
-//             value={form.image}
-//             onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
-//             placeholder="Image URL"
-//             className="border p-2 rounded"
-//           />
-//           <select
-//             value={form.available ? "1" : "0"}
-//             onChange={(e) => setForm((f) => ({ ...f, available: e.target.value === "1" }))}
-//             className="border p-2 rounded"
-//           >
-//             <option value="1">Available</option>
-//             <option value="0">Unavailable</option>
-//           </select>
-//           <textarea
-//             value={form.description}
-//             onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-//             placeholder="Description"
-//             className="border p-2 rounded md:col-span-2"
-//             rows={3}
-//           />
-//           <button disabled={!canAdd || saving} className="bg-red-600 text-white py-2 rounded md:col-span-2">
-//             {saving ? "Saving…" : "Add Item"}
-//           </button>
-//         </form>
-//       </div>
-
-//       {/* List + edit menu items */}
-//       <div className="bg-white rounded shadow p-4">
-//         <h2 className="font-semibold mb-3">Your Menu</h2>
-//         {menu.length === 0 ? (
-//           <p className="text-sm text-gray-500">No items yet.</p>
-//         ) : (
-//           <div className="overflow-auto rounded border">
-//             <table className="min-w-full text-sm">
-//               <thead className="bg-gray-50">
-//                 <tr>
-//                   <th className="text-left py-2 px-3">Item</th>
-//                   <th className="text-left py-2 px-3">Price</th>
-//                   <th className="text-left py-2 px-3">Available</th>
-//                   <th className="text-right py-2 px-3">Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {menu.map((row) => (
-//                   <tr key={row.id} className="border-t align-top">
-//                     <td className="py-2 px-3">
-//                       {editingId === row.id ? (
-//                         <>
-//                           <input
-//                             value={edit.name}
-//                             onChange={(e) => setEdit((x) => ({ ...x, name: e.target.value }))}
-//                             className="border p-2 rounded w-full mb-2"
-//                             placeholder="Name"
-//                           />
-//                           <textarea
-//                             value={edit.description}
-//                             onChange={(e) => setEdit((x) => ({ ...x, description: e.target.value }))}
-//                             className="border p-2 rounded w-full"
-//                             placeholder="Description"
-//                             rows={3}
-//                           />
-//                           <input
-//                             value={edit.image}
-//                             onChange={(e) => setEdit((x) => ({ ...x, image: e.target.value }))}
-//                             className="border p-2 rounded w-full mt-2"
-//                             placeholder="Image URL"
-//                           />
-//                         </>
-//                       ) : (
-//                         <>
-//                           <div className="font-medium">{row.name}</div>
-//                           <div className="text-xs text-gray-500 line-clamp-2">{row.description}</div>
-//                         </>
-//                       )}
-//                     </td>
-//                     <td className="py-2 px-3">
-//                       {editingId === row.id ? (
-//                         <input
-//                           type="number"
-//                           value={edit.price}
-//                           onChange={(e) => setEdit((x) => ({ ...x, price: e.target.value }))}
-//                           className="border p-2 rounded w-28"
-//                           placeholder="Price"
-//                         />
-//                       ) : (
-//                         <>₦{Number(row.price || 0).toLocaleString()}</>
-//                       )}
-//                     </td>
-//                     <td className="py-2 px-3">
-//                       {editingId === row.id ? (
-//                         <select
-//                           value={edit.available ? "1" : "0"}
-//                           onChange={(e) => setEdit((x) => ({ ...x, available: e.target.value === "1" }))}
-//                           className="border p-2 rounded"
-//                         >
-//                           <option value="1">Available</option>
-//                           <option value="0">Unavailable</option>
-//                         </select>
-//                       ) : (
-//                         <button
-//                           onClick={() => toggleAvailability(row)}
-//                           className={
-//                             row.available
-//                               ? "text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
-//                               : "text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded"
-//                           }
-//                           title="Toggle availability"
-//                         >
-//                           {row.available ? "Available" : "Unavailable"}
-//                         </button>
-//                       )}
-//                     </td>
-//                     <td className="py-2 px-3 text-right space-x-2">
-//                       {editingId === row.id ? (
-//                         <>
-//                           <button
-//                             onClick={() => saveEdit(row.id)}
-//                             disabled={saving}
-//                             className="text-xs bg-blue-600 text-white px-3 py-1 rounded"
-//                           >
-//                             {saving ? "Saving…" : "Save"}
-//                           </button>
-//                           <button
-//                             onClick={cancelEdit}
-//                             className="text-xs border px-3 py-1 rounded"
-//                           >
-//                             Cancel
-//                           </button>
-//                         </>
-//                       ) : (
-//                         <>
-//                           <button
-//                             onClick={() => startEdit(row)}
-//                             className="text-xs border px-3 py-1 rounded"
-//                           >
-//                             Edit
-//                           </button>
-//                           <button
-//                             onClick={() => removeItem(row.id)}
-//                             className="text-xs bg-red-600 text-white px-3 py-1 rounded"
-//                           >
-//                             Delete
-//                           </button>
-//                         </>
-//                       )}
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RestaurantOwnerDashboard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // src/pages/RestaurantOwnerDashboard.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -427,21 +12,29 @@ import {
 } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { useAuthOwner } from "../hooks/useAuthOwner";
-import { 
-  MdRestaurant, 
-  MdAdd, 
-  MdEdit, 
-  MdDelete, 
-  MdSave, 
-  MdClose, 
-  MdCheckCircle, 
+import {
+  MdRestaurant,
+  MdAdd,
+  MdEdit,
+  MdDelete,
+  MdSave,
+  MdClose,
+  MdCheckCircle,
   MdCancel,
   MdImage,
-  MdAttachMoney,
-  MdDescription
+  MdDescription,
 } from "react-icons/md";
 
-const emptyForm = { name: "", price: "", description: "", image: "", available: true };
+// 👇 Reuse the Cloudinary helper you exported from AdminDashboard
+import { uploadImageToCloudinary } from "./AdminDashboard";
+
+const emptyForm = {
+  name: "",
+  price: "",
+  description: "",
+  image: "",
+  available: true,
+};
 
 const RestaurantOwnerDashboard = () => {
   const { loading, restaurant } = useAuthOwner();
@@ -454,6 +47,10 @@ const RestaurantOwnerDashboard = () => {
   // edit state
   const [editingId, setEditingId] = useState(null);
   const [edit, setEdit] = useState(emptyForm);
+
+  // image upload states
+  const [uploadingNew, setUploadingNew] = useState(false);
+  const [uploadingEdit, setUploadingEdit] = useState(false);
 
   // load menu realtime for this restaurant
   useEffect(() => {
@@ -477,9 +74,58 @@ const RestaurantOwnerDashboard = () => {
     [form]
   );
 
+  /* ------------ Cloudinary upload handlers ------------ */
+
+  const handleNewImageSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setErr("");
+    setMsg("");
+    setUploadingNew(true);
+
+    try {
+      const { secureUrl } = await uploadImageToCloudinary(file);
+      setForm((f) => ({ ...f, image: secureUrl }));
+      setMsg("Menu image uploaded ✅");
+    } catch (error) {
+      console.error(error);
+      setErr(error.message || "Failed to upload image.");
+    } finally {
+      setUploadingNew(false);
+    }
+  };
+
+  const handleEditImageSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setErr("");
+    setMsg("");
+    setUploadingEdit(true);
+
+    try {
+      const { secureUrl } = await uploadImageToCloudinary(file);
+      setEdit((x) => ({ ...x, image: secureUrl }));
+      setMsg("Menu image updated ✅");
+    } catch (error) {
+      console.error(error);
+      setErr(error.message || "Failed to upload image.");
+    } finally {
+      setUploadingEdit(false);
+    }
+  };
+
+  /* ------------ CRUD ------------ */
+
   const addMenuItem = async (e) => {
     e.preventDefault();
     if (!restaurant?.id) return;
+    if (uploadingNew) {
+      setErr("Please wait for the image upload to finish.");
+      return;
+    }
+
     setSaving(true);
     setMsg("");
     setErr("");
@@ -520,6 +166,11 @@ const RestaurantOwnerDashboard = () => {
 
   const saveEdit = async (id) => {
     if (!restaurant?.id) return;
+    if (uploadingEdit) {
+      setErr("Please wait for the image upload to finish.");
+      return;
+    }
+
     setSaving(true);
     setMsg("");
     setErr("");
@@ -564,12 +215,16 @@ const RestaurantOwnerDashboard = () => {
     }
   };
 
+  /* ------------ Guards ------------ */
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50/30 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium text-lg">Loading dashboard...</p>
+          <p className="text-gray-600 font-medium text-lg">
+            Loading dashboard...
+          </p>
         </div>
       </div>
     );
@@ -582,14 +237,19 @@ const RestaurantOwnerDashboard = () => {
           <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <MdRestaurant className="w-10 h-10 text-amber-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">No Restaurant Found</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+            No Restaurant Found
+          </h2>
           <p className="text-amber-700 leading-relaxed">
-            No confirmed restaurant found for your account yet. Please contact admin for activation.
+            No confirmed restaurant found for your account yet. Please contact
+            admin for activation.
           </p>
         </div>
       </div>
     );
   }
+
+  /* ------------ Render ------------ */
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50/30">
@@ -608,16 +268,20 @@ const RestaurantOwnerDashboard = () => {
                   <MdRestaurant className="w-8 h-8 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-4xl font-black text-white mb-2">{restaurant.name}</h1>
+                  <h1 className="text-4xl font-black text-white mb-2">
+                    {restaurant.name}
+                  </h1>
                   <div className="flex flex-wrap items-center gap-3">
                     <code className="bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-mono">
                       /r/{restaurant.slug}
                     </code>
-                    <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
-                      restaurant.status === "confirmed" 
-                        ? "bg-green-400 text-green-900" 
-                        : "bg-amber-400 text-amber-900"
-                    }`}>
+                    <span
+                      className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
+                        restaurant.status === "confirmed"
+                          ? "bg-green-400 text-green-900"
+                          : "bg-amber-400 text-amber-900"
+                      }`}
+                    >
                       {restaurant.status}
                     </span>
                   </div>
@@ -646,7 +310,9 @@ const RestaurantOwnerDashboard = () => {
               <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                 <MdAdd className="w-6 h-6 text-red-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">Add New Menu Item</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Add New Menu Item
+              </h2>
             </div>
 
             <form onSubmit={addMenuItem} className="space-y-4">
@@ -662,7 +328,9 @@ const RestaurantOwnerDashboard = () => {
                     </div>
                     <input
                       value={form.name}
-                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, name: e.target.value }))
+                      }
                       placeholder="e.g., Jollof Rice Special"
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none"
                       required
@@ -682,7 +350,9 @@ const RestaurantOwnerDashboard = () => {
                     <input
                       type="number"
                       value={form.price}
-                      onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, price: e.target.value }))
+                      }
                       placeholder="e.g., 2500"
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none"
                       required
@@ -690,21 +360,48 @@ const RestaurantOwnerDashboard = () => {
                   </div>
                 </div>
 
-                {/* Image URL */}
+                {/* Image (Cloudinary + manual URL) */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Image URL
+                    Item Image
                   </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <MdImage className="w-5 h-5 text-gray-400" />
-                    </div>
+                  <div className="flex flex-col gap-3">
+                    <label className="relative flex items-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-red-500 hover:bg-red-50/40 transition-all">
+                      <MdImage className="w-5 h-5 text-gray-500" />
+                      <span className="text-sm text-gray-700">
+                        {uploadingNew
+                          ? "Uploading..."
+                          : "Click to select image (JPG/PNG)"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleNewImageSelect}
+                      />
+                    </label>
+
                     <input
                       value={form.image}
-                      onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
-                      placeholder="https://example.com/image.jpg"
-                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none"
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, image: e.target.value }))
+                      }
+                      placeholder="Or paste an image URL manually"
+                      className="w-full px-4 py-2 border-2 border-gray-200 rounded-xl text-xs focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none"
                     />
+
+                    {form.image && (
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={form.image}
+                          alt="Preview"
+                          className="w-16 h-16 rounded-xl object-cover border"
+                        />
+                        <span className="text-xs text-gray-500 break-all">
+                          {form.image}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -715,7 +412,12 @@ const RestaurantOwnerDashboard = () => {
                   </label>
                   <select
                     value={form.available ? "1" : "0"}
-                    onChange={(e) => setForm((f) => ({ ...f, available: e.target.value === "1" }))}
+                    onChange={(e) =>
+                      setForm((f) => ({
+                        ...f,
+                        available: e.target.value === "1",
+                      }))
+                    }
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none"
                   >
                     <option value="1">✓ Available</option>
@@ -735,7 +437,9 @@ const RestaurantOwnerDashboard = () => {
                   </div>
                   <textarea
                     value={form.description}
-                    onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, description: e.target.value }))
+                    }
                     placeholder="Describe your delicious dish..."
                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none resize-none"
                     rows={3}
@@ -744,8 +448,8 @@ const RestaurantOwnerDashboard = () => {
               </div>
 
               {/* Submit Button */}
-              <button 
-                disabled={!canAdd || saving} 
+              <button
+                disabled={!canAdd || saving}
                 className="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-4 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
               >
                 {saving ? (
@@ -771,7 +475,9 @@ const RestaurantOwnerDashboard = () => {
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Your Menu</h2>
               <div className="ml-auto bg-gray-100 px-4 py-2 rounded-full">
-                <span className="text-sm font-bold text-gray-700">{menu.length} items</span>
+                <span className="text-sm font-bold text-gray-700">
+                  {menu.length} items
+                </span>
               </div>
             </div>
 
@@ -780,13 +486,15 @@ const RestaurantOwnerDashboard = () => {
                 <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MdRestaurant className="w-10 h-10 text-gray-400" />
                 </div>
-                <p className="text-gray-500 font-medium">No menu items yet. Add your first item above!</p>
+                <p className="text-gray-500 font-medium">
+                  No menu items yet. Add your first item above!
+                </p>
               </div>
             ) : (
               <div className="space-y-4">
                 {menu.map((row) => (
-                  <div 
-                    key={row.id} 
+                  <div
+                    key={row.id}
                     className="border-2 border-gray-200 rounded-2xl p-5 hover:border-red-200 hover:shadow-md transition-all duration-300"
                   >
                     {editingId === row.id ? (
@@ -795,39 +503,100 @@ const RestaurantOwnerDashboard = () => {
                         <div className="grid md:grid-cols-2 gap-4">
                           <input
                             value={edit.name}
-                            onChange={(e) => setEdit((x) => ({ ...x, name: e.target.value }))}
+                            onChange={(e) =>
+                              setEdit((x) => ({
+                                ...x,
+                                name: e.target.value,
+                              }))
+                            }
                             className="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none"
                             placeholder="Name"
                           />
                           <input
                             type="number"
                             value={edit.price}
-                            onChange={(e) => setEdit((x) => ({ ...x, price: e.target.value }))}
+                            onChange={(e) =>
+                              setEdit((x) => ({
+                                ...x,
+                                price: e.target.value,
+                              }))
+                            }
                             className="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none"
                             placeholder="Price"
                           />
                         </div>
+
                         <textarea
                           value={edit.description}
-                          onChange={(e) => setEdit((x) => ({ ...x, description: e.target.value }))}
+                          onChange={(e) =>
+                            setEdit((x) => ({
+                              ...x,
+                              description: e.target.value,
+                            }))
+                          }
                           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none resize-none"
                           placeholder="Description"
                           rows={3}
                         />
-                        <input
-                          value={edit.image}
-                          onChange={(e) => setEdit((x) => ({ ...x, image: e.target.value }))}
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none"
-                          placeholder="Image URL"
-                        />
+
+                        {/* Edit image (Cloudinary + manual URL) */}
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-gray-700">
+                            Item Image
+                          </label>
+                          <label className="relative flex items-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-red-500 hover:bg-red-50/40 transition-all">
+                            <MdImage className="w-5 h-5 text-gray-500" />
+                            <span className="text-sm text-gray-700">
+                              {uploadingEdit
+                                ? "Uploading..."
+                                : "Click to change image"}
+                            </span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleEditImageSelect}
+                            />
+                          </label>
+                          <input
+                            value={edit.image}
+                            onChange={(e) =>
+                              setEdit((x) => ({
+                                ...x,
+                                image: e.target.value,
+                              }))
+                            }
+                            className="w-full px-4 py-2 border-2 border-gray-200 rounded-xl text-xs focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none"
+                            placeholder="Image URL"
+                          />
+                          {edit.image && (
+                            <div className="flex items-center gap-3 mt-1">
+                              <img
+                                src={edit.image}
+                                alt="Preview"
+                                className="w-16 h-16 rounded-xl object-cover border"
+                              />
+                              <span className="text-xs text-gray-500 break-all">
+                                {edit.image}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
                         <select
                           value={edit.available ? "1" : "0"}
-                          onChange={(e) => setEdit((x) => ({ ...x, available: e.target.value === "1" }))}
+                          onChange={(e) =>
+                            setEdit((x) => ({
+                              ...x,
+                              available: e.target.value === "1",
+                            }))
+                          }
                           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none"
                         >
                           <option value="1">✓ Available</option>
                           <option value="0">✗ Unavailable</option>
                         </select>
+
                         <div className="flex gap-3">
                           <button
                             onClick={() => saveEdit(row.id)}
@@ -835,7 +604,9 @@ const RestaurantOwnerDashboard = () => {
                             className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all duration-300 disabled:opacity-50"
                           >
                             <MdSave className="w-5 h-5" />
-                            <span>{saving ? "Saving..." : "Save Changes"}</span>
+                            <span>
+                              {saving ? "Saving..." : "Save Changes"}
+                            </span>
                           </button>
                           <button
                             onClick={cancelEdit}
@@ -850,9 +621,13 @@ const RestaurantOwnerDashboard = () => {
                       // View Mode
                       <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">{row.name}</h3>
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">
+                            {row.name}
+                          </h3>
                           {row.description && (
-                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">{row.description}</p>
+                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                              {row.description}
+                            </p>
                           )}
                           <div className="flex items-center gap-3">
                             <span className="text-2xl font-black text-gray-900">
@@ -866,10 +641,21 @@ const RestaurantOwnerDashboard = () => {
                                   : "bg-gray-200 text-gray-600 hover:bg-gray-300"
                               }`}
                             >
-                              {row.available ? "✓ Available" : "✗ Unavailable"}
+                              {row.available
+                                ? "✓ Available"
+                                : "✗ Unavailable"}
                             </button>
                           </div>
                         </div>
+
+                        {row.image && (
+                          <img
+                            src={row.image}
+                            alt={row.name}
+                            className="w-24 h-24 rounded-xl object-cover border md:self-center"
+                          />
+                        )}
+
                         <div className="flex md:flex-col gap-2">
                           <button
                             onClick={() => startEdit(row)}

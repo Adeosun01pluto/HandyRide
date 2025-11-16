@@ -5,7 +5,11 @@ import { FiMenu, FiSearch, FiX, FiShoppingCart } from "react-icons/fi";
 import { MdRestaurantMenu, MdFeedback, MdChecklist, MdDeliveryDining } from "react-icons/md";
 import handy from "../assets/Handy_logo1.png";
 import { useSearch } from "../SearchContext";
-import { useCart } from "../context/CartContext"; // ensure this path matches your project
+import { useCart } from "../context/CartContext";
+
+// 🔥 Firebase auth
+import { auth } from "../lib/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const Navbar = () => {
   const navbarRef = useRef(null);
@@ -13,12 +17,22 @@ const Navbar = () => {
   const mobileSearchRef = useRef(null);
 
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
   const { searchQuery, setSearchQuery } = useSearch();
   const { itemsCount } = useCart();
 
+  // Listen for auth state
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u || null);
+    });
+    return () => unsub();
+  }, []);
+
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navbarRef.current && !navbarRef.current.contains(event.target)) {
@@ -36,6 +50,7 @@ const Navbar = () => {
     };
   }, [open]);
 
+  // Close mobile menu on route change
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
@@ -53,10 +68,8 @@ const Navbar = () => {
     setOpen(false);
   };
 
-  const isActive = (path) => {
-    if (path === "/foods") return location.pathname === "/" || location.pathname === "/foods";
-    return location.pathname === path;
-  };
+  // Updated: no longer treat "/" as foods, since you now have a landing page
+  const isActive = (path) => location.pathname === path;
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -78,13 +91,39 @@ const Navbar = () => {
     scrollToTop();
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+    navigate("/"); // back to landing
+  };
+
+  const userInitial =
+    user?.displayName?.charAt(0)?.toUpperCase() ||
+    user?.email?.charAt(0)?.toUpperCase() ||
+    "U";
+
+  const userLabel = user?.displayName || user?.email || "User";
+
   return (
     <>
-      <nav ref={navbarRef} className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all">
+      <nav
+        ref={navbarRef}
+        className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-300 transition-all"
+      >
         <div className="flex items-center justify-between px-2 md:px-16 lg:px-24 xl:px-32 py-3 relative">
           {/* Logo */}
-          <button onClick={() => handleNavigation("/foods")} className="text-3xl font-bold text-red-500">
-            <img className="h-16 w-48 ml-[-10px] object-cover" src={handy} alt="Handy logo" />
+          <button
+            onClick={() => handleNavigation("/")}
+            className="text-3xl font-bold text-red-500"
+          >
+            <img
+              className="h-16 w-48 ml-[-10px] object-cover"
+              src={handy}
+              alt="Handy logo"
+            />
           </button>
 
           {/* Desktop Menu */}
@@ -97,10 +136,16 @@ const Navbar = () => {
                   key={item.path}
                   onClick={() => handleNavigation(item.path)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-red-50 ${
-                    active ? "text-red-600 bg-red-50 font-semibold" : "text-gray-700 hover:text-red-600"
+                    active
+                      ? "text-red-600 bg-red-50 font-semibold"
+                      : "text-gray-700 hover:text-red-600"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${active ? "text-red-600" : "text-gray-500"}`} />
+                  <Icon
+                    className={`w-5 h-5 ${
+                      active ? "text-red-600" : "text-gray-500"
+                    }`}
+                  />
                   <span>{item.label}</span>
                 </button>
               );
@@ -118,7 +163,10 @@ const Navbar = () => {
                 onKeyDown={handleSearchKeyDown}
               />
               {searchQuery ? (
-                <button onClick={clearSearch} className="text-gray-400 hover:text-red-500 transition-colors">
+                <button
+                  onClick={clearSearch}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                >
                   <FiX className="w-4 h-4" />
                 </button>
               ) : (
@@ -140,6 +188,43 @@ const Navbar = () => {
                 </span>
               )}
             </button>
+
+            {/* Desktop User / Auth */}
+            {user ? (
+              <div className="flex items-center gap-2 ml-2">
+                {/* Profile chip (future: wire to /profile or /account) */}
+                <button
+                  type="button"
+                  className="flex items-center gap-2 px-3 py-2 rounded-full bg-red-50 text-red-700 border border-red-100 max-w-[180px]"
+                  title={userLabel}
+                >
+                  <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center text-sm font-semibold">
+                    {userInitial}
+                  </div>
+                  <div className="hidden md:flex flex-col text-left">
+                    <span className="text-[10px] leading-none text-gray-500">
+                      Logged in as
+                    </span>
+                    <span className="text-xs font-semibold truncate max-w-[120px]">
+                      {userLabel}
+                    </span>
+                  </div>
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs md:text-sm font-semibold text-red-600 hover:text-red-700 px-2 py-1 rounded-lg hover:bg-red-50 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="ml-2 px-4 py-2 rounded-full border border-red-500 text-red-600 text-sm font-semibold hover:bg-red-50 transition"
+              >
+                Login
+              </button>
+            )}
           </div>
 
           {/* Mobile: Cart + Menu toggles */}
@@ -157,7 +242,11 @@ const Navbar = () => {
               )}
             </button>
             <button onClick={() => setOpen(!open)} aria-label="Menu">
-              {open ? <FiX className="w-6 h-6 text-red-600" /> : <FiMenu className="w-6 h-6 text-red-600" />}
+              {open ? (
+                <FiX className="w-6 h-6 text-red-600" />
+              ) : (
+                <FiMenu className="w-6 h-6 text-red-600" />
+              )}
             </button>
           </div>
         </div>
@@ -173,10 +262,16 @@ const Navbar = () => {
                   key={item.path}
                   onClick={() => handleNavigation(item.path)}
                   className={`flex items-center gap-3 w-full py-3 px-3 rounded-lg transition-all duration-200 ${
-                    active ? "text-red-600 bg-red-50 font-semibold" : "text-gray-700 hover:text-red-600 hover:bg-red-50"
+                    active
+                      ? "text-red-600 bg-red-50 font-semibold"
+                      : "text-gray-700 hover:text-red-600 hover:bg-red-50"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${active ? "text-red-600" : "text-gray-500"}`} />
+                  <Icon
+                    className={`w-5 h-5 ${
+                      active ? "text-red-600" : "text-gray-500"
+                    }`}
+                  />
                   <span>{item.label}</span>
                 </button>
               );
@@ -194,13 +289,52 @@ const Navbar = () => {
                 onKeyDown={handleSearchKeyDown}
               />
               {searchQuery ? (
-                <button onClick={clearSearch} className="text-gray-400 hover:text-red-500 transition-colors">
+                <button
+                  onClick={clearSearch}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                >
                   <FiX className="w-4 h-4" />
                 </button>
               ) : (
                 <FiSearch className="text-red-500" />
               )}
             </div>
+
+            {/* Mobile user / auth section */}
+            {user ? (
+              <div className="mt-4 w-full bg-red-50 border border-red-100 rounded-2xl p-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-full bg-red-600 text-white flex items-center justify-center text-sm font-semibold">
+                    {userInitial}
+                  </div>
+                  <div className="flex flex-col text-xs">
+                    <span className="text-gray-500">Logged in</span>
+                    <span className="font-semibold truncate max-w-[140px]">
+                      {userLabel}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setOpen(false);
+                  }}
+                  className="text-xs font-semibold text-red-600 hover:text-red-700 px-2 py-1 rounded-lg hover:bg-red-100 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  navigate("/login");
+                  setOpen(false);
+                }}
+                className="mt-3 w-full py-3 rounded-xl bg-red-600 text-white font-semibold shadow-md hover:bg-red-700 transition"
+              >
+                Login
+              </button>
+            )}
           </div>
         )}
       </nav>
@@ -212,5 +346,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-

@@ -84,7 +84,7 @@ const Explore = () => {
               <p className="text-gray-500 text-lg">Try searching with different keywords</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
               {filteredRestaurants.map((r, idx) => (
                 <Link
                   key={r.id}
@@ -93,7 +93,7 @@ const Explore = () => {
                   style={{ animationDelay: `${idx * 0.05}s` }}
                 >
                   {/* Image Container */}
-                  <div className="relative h-48 md:h-56 w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                  <div className="relative h-32 md:h-56 w-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                     <img
                       src={r.image || fallbackImage}
                       alt={r.name}
@@ -108,29 +108,29 @@ const Explore = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-4 md:p-5">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
+                  <div className="p-2 md:p-5">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1 md:mb-3 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
                       {r.name}
                     </h3>
                     
                     {/* Location */}
                     {r.location && (
-                      <div className="flex items-center gap-2 text-gray-600 mb-2">
-                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-red-50 transition-colors duration-300">
+                      <div className="flex items-center gap-2 text-gray-600 mb-1 md:mb-2">
+                        <div className="w-5 h-5 md:w-8 md:h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-red-50 transition-colors duration-300">
                           <MdLocationOn className="w-4 h-4 text-gray-500 group-hover:text-red-500" />
                         </div>
-                        <span className="text-sm font-medium">{r.location}</span>
+                        <span className="text-[12px] md:text-sm font-medium">{r.location}</span>
                       </div>
                     )}
 
                     {/* Delivery Info */}
                     {r.deliveryAmount && (
-                      <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                        <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center">
+                      <div className="flex items-center gap-2 pt-1 md:pt-3 border-t border-gray-100">
+                        <div className="w-5 h-5 md:w-8 md:h-8 bg-red-50 rounded-lg flex items-center justify-center">
                           <MdDeliveryDining className="w-4 h-4 text-red-600" />
                         </div>
-                        <div className="flex items-center gap-1.5 text-sm">
-                          <span className="text-gray-500 font-medium">Delivery from</span>
+                        <div className="flex items-center gap-1.5 text-[12px] md:text-sm">
+                          <span className="text-gray-500 font-light">Delivery from</span>
                           <span className="font-bold text-red-600">{r.deliveryAmount}</span>
                         </div>
                       </div>
