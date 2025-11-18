@@ -154,7 +154,7 @@ const RestaurantPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50/30">
-      <div className="px-4 md:px-10 lg:px-20 py-8 md:py-12">
+      <div className="px-2 md:px-10 lg:px-20 py-8 md:py-12">
         <div className="max-w-7xl mx-auto">
           {/* Back Button */}
           <Link
@@ -189,7 +189,7 @@ const RestaurantPage = () => {
             </div>
 
             {/* BOTTOM: Gradient Info Section */}
-            <div className="relative bg-gradient-to-br from-red-600 via-red-500 to-orange-500 p-6 md:p-10">
+            <div className="relative bg-gradient-to-br from-red-600 via-red-500 to-orange-500 p-3 md:p-10">
               <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
@@ -198,9 +198,9 @@ const RestaurantPage = () => {
               <div className="relative">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {restaurant.location && (
-                    <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <MdLocationOn className="w-5 h-5 text-white" />
+                    <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-3">
+                      <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <MdLocationOn className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       </div>
                       <div>
                         <p className="text-white/70 text-xs font-medium">
@@ -214,9 +214,9 @@ const RestaurantPage = () => {
                   )}
 
                   {restaurant.operatingHours && (
-                    <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <MdAccessTime className="w-5 h-5 text-white" />
+                    <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-3">
+                      <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <MdAccessTime className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       </div>
                       <div>
                         <p className="text-white/70 text-xs font-medium">
@@ -231,8 +231,8 @@ const RestaurantPage = () => {
 
                   {restaurant.deliveryAmount && (
                     <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <MdDeliveryDining className="w-5 h-5 text-white" />
+                      <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <MdDeliveryDining className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       </div>
                       <div>
                         <p className="text-white/70 text-xs font-medium">
@@ -297,7 +297,7 @@ const RestaurantPage = () => {
                 if (!items.length) return null;
 
                 return (
-                  <div key={categoryName} className="mb-10">
+                  <div key={categoryName} className="mb-6 md:mb-10">
                     {/* Category Header (hidden when viewing All? Optional) */}
                     {activeCategory === "All" && (
                       <div className="flex items-center gap-3 mb-4">
@@ -324,7 +324,7 @@ const RestaurantPage = () => {
                             style={{ animationDelay: `${idx * 0.05}s` }}
                           >
                             {/* Item Image */}
-                            <div className="relative h-40 sm:h-48 md:h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                            <div className="relative h-32 sm:h-40 md:h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                               <img
                                 src={
                                   m.image ||
@@ -337,13 +337,13 @@ const RestaurantPage = () => {
                             </div>
 
                             {/* Content */}
-                            <div className="p-4 sm:p-5">
-                              <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors duration-300">
+                            <div className="p-2 sm:p-5">
+                              <h4 className="text-base sm:text-lg font-bold text-gray-900 mb-1 group-hover:text-red-600 transition-colors duration-300">
                                 {m.name}
                               </h4>
 
                               {m.description && (
-                                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-3 leading-relaxed">
+                                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 mb-1 leading-relaxed">
                                   {m.description}
                                 </p>
                               )}
@@ -351,10 +351,10 @@ const RestaurantPage = () => {
                               {/* Price and Add Button */}
                               <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                                 <div>
-                                  <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-1">
+                                  <p className="text-[10px] sm:text-xs text-gray-500 font-medium">
                                     Price
                                   </p>
-                                  <span className="text-lg sm:text-xl font-black text-gray-900">
+                                  <span className="text-md sm:text-xl font-black text-gray-900">
                                     ₦{Number(m.price || 0).toLocaleString()}
                                   </span>
                                 </div>
