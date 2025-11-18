@@ -6,8 +6,10 @@ import {
   MdFeedback,
   MdChecklist,
   MdDeliveryDining,
+  MdLocalGroceryStore,
 } from "react-icons/md";
 import { LuBike } from "react-icons/lu";
+import { GoPackage } from "react-icons/go";
 
 const Bottombar = () => {
   const navigate = useNavigate();
@@ -25,19 +27,24 @@ const Bottombar = () => {
       label: "Foods",
     },
     {
+      path: "/logistics",
+      icon: GoPackage,
+      label: "Dispatch",
+    },
+    {
       path: "/ride",
       icon: LuBike,
       label: "Book Ride",
     },
     {
+      path: "/",
+      icon: MdLocalGroceryStore,
+      label: "Grocery",
+    },
+    {
       path: "/errands",
       icon: MdChecklist,
       label: "Errands",
-    },
-    {
-      path: "/logistics",
-      icon: MdDeliveryDining,
-      label: "Logistics",
     },
   ];
 
@@ -74,7 +81,7 @@ const Bottombar = () => {
       {/* Show only on mobile + small tablets: md:hidden */}
       <div className="block md:hidden">
         <div className="fixed bottom-4 left-4 right-4 z-50 h-16 rounded-2xl p-1 animated-gradient-border shadow-lg">
-          <div className="grid h-full w-full grid-cols-4 rounded-xl bg-white overflow-hidden">
+          <div className="grid h-full w-full grid-cols-5 rounded-xl bg-white overflow-hidden">
             {navItems.map((item) => {
               const IconComponent = item.icon;
               const active = isActive(item.path);
@@ -84,19 +91,20 @@ const Bottombar = () => {
                   key={item.path}
                   type="button"
                   onClick={() => handleNavigation(item.path)}
-                  className="inline-flex flex-col items-center justify-center w-full h-full hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+                  className={`inline-flex
+                    ${active? " bg-red-500" :""} flex-col items-center justify-center w-full h-full hover:bg-gray-50 transition-colors duration-150 ease-in-out`}
                 >
                   <IconComponent
                     className={`w-5 h-5 mb-1 transition-colors duration-150 ease-in-out ${
                       active
-                        ? "text-red-600"
+                        ? "text-white"
                         : "text-gray-500"
                     }`}
                   />
                   <span
                     className={`text-sm transition-colors duration-150 ease-in-out ${
                       active
-                        ? "text-red-600"
+                        ? "text-white"
                         : "text-gray-500"
                     }`}
                   >

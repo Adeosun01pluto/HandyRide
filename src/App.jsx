@@ -35,6 +35,7 @@ import LandingPage from "./pages/LandingPage";
 import CustomerLogin from "./pages/CustomerLogin";
 import CustomerRegister from "./pages/CustomerRegister";
 import CustomerRoute from "./routes/CustomerRoute";
+import FloatingCartButton from "./components/FloatingCartButton";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -52,7 +53,8 @@ function App() {
           <div className="App">
             <ScrollToTop />
             <Navbar />
-
+            {/* 🛒 Floating Cart Button (only appears if there are items) */}
+            <FloatingCartButton />
             <Routes>
               {/* Public landing & auth */}
               <Route path="/" element={<LandingPage />} />
