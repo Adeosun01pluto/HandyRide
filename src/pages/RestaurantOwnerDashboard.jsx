@@ -34,10 +34,12 @@ const emptyForm = {
   description: "",
   image: "",
   available: true,
+  categoryId: "",
 };
 
 const RestaurantOwnerDashboard = () => {
   const { loading, restaurant } = useAuthOwner();
+
   const [menu, setMenu] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -52,6 +54,11 @@ const RestaurantOwnerDashboard = () => {
   const [uploadingNew, setUploadingNew] = useState(false);
   const [uploadingEdit, setUploadingEdit] = useState(false);
 
+  // 🏷 Categories
+  const [categories, setCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [savingCategory, setSavingCategory] = useState(false);
+
   // load menu realtime for this restaurant
   useEffect(() => {
     if (!restaurant?.id) return;
@@ -65,6 +72,23 @@ const RestaurantOwnerDashboard = () => {
         setMenu(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
       },
       (e) => setErr(e.message || "Failed to load menu")
+    );
+    return () => unsub();
+  }, [restaurant?.id]);
+
+  // load categories realtime
+  useEffect(() => {
+    if (!restaurant?.id) return;
+    const cq = query(
+      collection(db, "restaurants", restaurant.id, "categories"),
+      orderBy("name")
+    );
+    const unsub = onSnapshot(
+      cq,
+      (snap) => {
+        setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      },
+      (e) => setErr(e.message || "Failed to load categories")
     );
     return () => unsub();
   }, [restaurant?.id]);
@@ -116,7 +140,37 @@ const RestaurantOwnerDashboard = () => {
     }
   };
 
-  /* ------------ CRUD ------------ */
+  /* ------------ CATEGORY CRUD (simple add) ------------ */
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    if (!restaurant?.id) return;
+    const name = newCategoryName.trim();
+    if (!name) return;
+
+    setSavingCategory(true);
+    setErr("");
+    setMsg("");
+
+    try {
+      const ref = await addDoc(
+        collection(db, "restaurants", restaurant.id, "categories"),
+        { name }
+      );
+      setMsg("Category added!");
+      setNewCategoryName("");
+
+      // Auto-select this new category in the menu form
+      setForm((f) => ({ ...f, categoryId: ref.id }));
+    } catch (error) {
+      console.error(error);
+      setErr(error.message || "Failed to add category.");
+    } finally {
+      setSavingCategory(false);
+    }
+  };
+
+  /* ------------ Menu CRUD ------------ */
 
   const addMenuItem = async (e) => {
     e.preventDefault();
@@ -130,16 +184,22 @@ const RestaurantOwnerDashboard = () => {
     setMsg("");
     setErr("");
     try {
+      const selectedCat = categories.find((c) => c.id === form.categoryId);
+
       await addDoc(collection(db, "restaurants", restaurant.id, "menu"), {
         name: form.name.trim(),
         price: Number(form.price),
         description: form.description || "",
         image: form.image || "",
         available: !!form.available,
+        categoryId: selectedCat ? selectedCat.id : "",
+        categoryName: selectedCat ? selectedCat.name : "",
       });
+
       setForm(emptyForm);
       setMsg("Menu item added!");
     } catch (e) {
+      console.error(e);
       setErr(e.message || "Failed to add menu item.");
     } finally {
       setSaving(false);
@@ -154,6 +214,7 @@ const RestaurantOwnerDashboard = () => {
       description: row.description || "",
       image: row.image || "",
       available: !!row.available,
+      categoryId: row.categoryId || "",
     });
     setMsg("");
     setErr("");
@@ -175,16 +236,21 @@ const RestaurantOwnerDashboard = () => {
     setMsg("");
     setErr("");
     try {
+      const selectedCat = categories.find((c) => c.id === edit.categoryId);
+
       await updateDoc(doc(db, "restaurants", restaurant.id, "menu", id), {
         name: edit.name.trim(),
         price: Number(edit.price),
         description: edit.description || "",
         image: edit.image || "",
         available: !!edit.available,
+        categoryId: selectedCat ? selectedCat.id : "",
+        categoryName: selectedCat ? selectedCat.name : "",
       });
       setMsg("Menu item updated!");
       cancelEdit();
     } catch (e) {
+      console.error(e);
       setErr(e.message || "Failed to update item.");
     } finally {
       setSaving(false);
@@ -199,6 +265,7 @@ const RestaurantOwnerDashboard = () => {
       await deleteDoc(doc(db, "restaurants", restaurant.id, "menu", id));
       setMsg("Item deleted.");
     } catch (e) {
+      console.error(e);
       setErr(e.message || "Failed to delete item.");
     }
   };
@@ -211,6 +278,7 @@ const RestaurantOwnerDashboard = () => {
         available: !row.available,
       });
     } catch (e) {
+      console.error(e);
       setErr(e.message || "Failed to change availability.");
     }
   };
@@ -221,7 +289,7 @@ const RestaurantOwnerDashboard = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50/30 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600 font-medium text-lg">
             Loading dashboard...
           </p>
@@ -259,8 +327,8 @@ const RestaurantOwnerDashboard = () => {
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 border border-gray-100">
             <div className="relative bg-gradient-to-br from-red-600 via-red-500 to-orange-500 p-8 md:p-12">
               <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
               </div>
 
               <div className="relative flex items-center gap-4">
@@ -303,6 +371,71 @@ const RestaurantOwnerDashboard = () => {
               <p className="text-red-800 font-medium">{err}</p>
             </div>
           )}
+
+          {/* CATEGORY MANAGER */}
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-8 mb-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 bg-orange-100 rounded-lg flex items-center justify-center">
+                <span className="text-orange-600 text-lg">🏷️</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Menu Categories
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Add categories like &quot;Rice&quot;, &quot;Drinks&quot;,
+                  &quot;Swallow&quot; to organize your menu.
+                </p>
+              </div>
+            </div>
+
+            <form
+              onSubmit={handleAddCategory}
+              className="flex flex-col sm:flex-row gap-3 mb-4"
+            >
+              <input
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                placeholder="e.g., Rice Dishes, Drinks, Protein"
+                className="flex-1 px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none text-sm"
+              />
+              <button
+                type="submit"
+                disabled={!newCategoryName.trim() || savingCategory}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {savingCategory ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Adding…</span>
+                  </>
+                ) : (
+                  <>
+                    <MdAdd className="w-4 h-4" />
+                    <span>Add Category</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            {categories.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {categories.map((c) => (
+                  <span
+                    key={c.id}
+                    className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-xs font-semibold text-gray-700"
+                  >
+                    {c.name}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500">
+                No categories yet. Add at least one to start organizing your
+                menu.
+              </p>
+            )}
+          </div>
 
           {/* Add Menu Item Form */}
           <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10 mb-8">
@@ -360,6 +493,51 @@ const RestaurantOwnerDashboard = () => {
                   </div>
                 </div>
 
+                {/* Category select */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Category
+                  </label>
+                  <select
+                    value={form.categoryId}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, categoryId: e.target.value }))
+                    }
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none text-sm"
+                  >
+                    <option value="">— No Category —</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[11px] text-gray-500 mt-1">
+                    Use the &quot;Menu Categories&quot; box above to create new
+                    categories. New ones will show here immediately.
+                  </p>
+                </div>
+
+                {/* Availability */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Availability
+                  </label>
+                  <select
+                    value={form.available ? "1" : "0"}
+                    onChange={(e) =>
+                      setForm((f) => ({
+                        ...f,
+                        available: e.target.value === "1",
+                      }))
+                    }
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none"
+                  >
+                    <option value="1">✓ Available</option>
+                    <option value="0">✗ Unavailable</option>
+                  </select>
+                </div>
+
                 {/* Image (Cloudinary + manual URL) */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -404,26 +582,6 @@ const RestaurantOwnerDashboard = () => {
                     )}
                   </div>
                 </div>
-
-                {/* Availability */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Availability
-                  </label>
-                  <select
-                    value={form.available ? "1" : "0"}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        available: e.target.value === "1",
-                      }))
-                    }
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all duration-300 outline-none"
-                  >
-                    <option value="1">✓ Available</option>
-                    <option value="0">✗ Unavailable</option>
-                  </select>
-                </div>
               </div>
 
               {/* Description */}
@@ -454,7 +612,7 @@ const RestaurantOwnerDashboard = () => {
               >
                 {saving ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Saving...</span>
                   </>
                 ) : (
@@ -524,6 +682,30 @@ const RestaurantOwnerDashboard = () => {
                             className="px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none"
                             placeholder="Price"
                           />
+                        </div>
+
+                        {/* Category select in edit mode */}
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Category
+                          </label>
+                          <select
+                            value={edit.categoryId || ""}
+                            onChange={(e) =>
+                              setEdit((x) => ({
+                                ...x,
+                                categoryId: e.target.value,
+                              }))
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all outline-none text-sm"
+                          >
+                            <option value="">— No Category —</option>
+                            {categories.map((c) => (
+                              <option key={c.id} value={c.id}>
+                                {c.name}
+                              </option>
+                            ))}
+                          </select>
                         </div>
 
                         <textarea
@@ -621,9 +803,16 @@ const RestaurantOwnerDashboard = () => {
                       // View Mode
                       <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">
-                            {row.name}
-                          </h3>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-xl font-bold text-gray-900">
+                              {row.name}
+                            </h3>
+                            {row.categoryName && (
+                              <span className="px-3 py-0.5 rounded-full bg-gray-100 text-[11px] font-semibold text-gray-700">
+                                {row.categoryName}
+                              </span>
+                            )}
+                          </div>
                           {row.description && (
                             <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                               {row.description}

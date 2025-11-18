@@ -391,7 +391,7 @@ export default function RideStatusPage() {
           <div className="flex justify-between text-xs mt-2 text-white/80">
             <span>Waiting</span>
             <span>Paid</span>
-            <span>Done</span>
+            <span>Arrived</span>
           </div>
         </div>
 
