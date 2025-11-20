@@ -13,6 +13,7 @@ import {
   MdPhone,
   MdLocationOn,
 } from "react-icons/md";
+import { FaGift } from "react-icons/fa";
 
 const CustomerRegister = () => {
   const [params] = useSearchParams();
@@ -24,6 +25,7 @@ const CustomerRegister = () => {
     phone: "",
     email: "",
     password: "",
+    promoCode: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -223,6 +225,28 @@ const CustomerRegister = () => {
                   required
                   disabled={loading}
                   minLength={6}
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Minimum 6 characters. Don’t reuse your school password.
+              </p>
+            </div>
+            {/* Promo code */}
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-2">
+                Promo Code (Optional)
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <FaGift className="w-5 h-5 text-gray-400" />
+                </div>
+                <input
+                  name="promoCode"
+                  type="promoCode"
+                  value={form.promoCode}
+                  onChange={onChange}
+                  placeholder="Promo Code"
+                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-4 focus:ring-red-100 outline-none transition-all"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
