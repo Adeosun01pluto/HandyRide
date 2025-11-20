@@ -237,23 +237,7 @@ const Navbar = () => {
 
           {/* Mobile: avatar + hamburger (cart removed) */}
           <div className="sm:hidden flex items-center gap-3">
-            {/* 👤 Mobile profile avatar / login pill */}
-            {user ? (
-              <button
-                type="button"
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-red-600 text-white text-sm font-semibold"
-                title={userLabel}
-              >
-                {userInitial}
-              </button>
-            ) : (
-              <button
-                onClick={() => navigate("/login")}
-                className="px-3 py-1 rounded-full border border-red-500 text-red-600 text-xs font-semibold hover:bg-red-50 transition"
-              >
-                Login
-              </button>
-            )}
+
 
             {/* ❌ Mobile cart commented out */}
             {/*
@@ -276,9 +260,9 @@ const Navbar = () => {
             {/* Hamburger */}
             <button onClick={() => setOpen(!open)} aria-label="Menu">
               {open ? (
-                <FiX className="w-6 h-6 text-red-600" />
+                <FiX className="w-8 h-8 text-red-600" />
               ) : (
-                <FiMenu className="w-6 h-6 text-red-600" />
+                <FiMenu className="w-8 h-8 text-red-600" />
               )}
             </button>
           </div>
