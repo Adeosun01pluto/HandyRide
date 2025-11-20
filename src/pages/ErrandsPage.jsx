@@ -42,23 +42,23 @@ const ErrandsPage = () => {
       to={service.whatsappLink}
       target="_blank"
       rel="noopener noreferrer" 
-      className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 border border-gray-100 transform hover:scale-105 hover:-translate-y-2 animate-fadeInUp group"
+      className="flex flex-col justify-between items-start bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 p-3 md:p-6 border border-gray-100 transform hover:scale-105 hover:-translate-y-2 animate-fadeInUp group"
       style={{
         animationDelay: `${index * 0.15}s`,
         opacity: 0,
         animation: `fadeInUp 0.6s ease-out ${index * 0.15}s forwards`
       }}
     >
-      <div className={`${service.color} text-white p-4 rounded-lg inline-block mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+      <div className={`${service.color} text-white p-2 md:p-4 rounded-lg inline-block mb-2 md:mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
         {service.icon}
       </div>
-      <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-600 transition-colors duration-300">{service.title}</h3>
+      <h3 className="text-md md:text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-600 transition-colors duration-300">{service.title}</h3>
       <p className="text-gray-600 text-sm mb-4">{service.description}</p>
       <Link
         to={service.whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 hover:shadow-lg"
+        className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 md:py-3 px-2 md:px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 text-xs hover:shadow-lg"
       >
         <BiTask className="w-4 h-4 animate-pulse" />
         Run Errand Now!
@@ -91,7 +91,7 @@ const ErrandsPage = () => {
             <FaShoppingBag className="w-6 h-6 text-red-500 animate-pulse" />
             <h2 className="text-xl md:text-2xl font-bold text-gray-800">Our Errand Services</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {errandServices.map((service, index) => (
               <ServiceCard key={index} service={service} index={index} />
             ))}
