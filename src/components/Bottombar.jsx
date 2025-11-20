@@ -185,14 +185,14 @@ const Bottombar = () => {
       label: "Dispatch",
     },
     {
+      path: "/r/de-rhymes-supermart",
+      icon: MdLocalGroceryStore,
+      label: "Grocery",
+    },
+    {
       path: "/ride",
       icon: LuBike,
       label: "Book Ride",
-    },
-    {
-      path: "/",
-      icon: MdLocalGroceryStore,
-      label: "Grocery",
     },
     {
       path: "/errands",
