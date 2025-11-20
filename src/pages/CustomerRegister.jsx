@@ -105,8 +105,7 @@ const CustomerRegister = () => {
             Create HandyRide Account
           </h1>
           <p className="text-gray-600 text-md max-w-md mx-auto">
-            Register once and book rides on campus anytime. We just need a few
-            details riders can use to find and reach you.
+            Food delivery, book a ride, package drop-offs, groceries, and small-biz dispatch — all in one smooth HandyRide account
           </p>
         </div>
 
