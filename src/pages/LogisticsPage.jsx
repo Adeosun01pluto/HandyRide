@@ -1,132 +1,3 @@
-// import React from 'react';
-// import { FaTruck, FaBoxOpen, FaShippingFast, FaMapMarkerAlt } from 'react-icons/fa';
-// import { MdLocalShipping, MdOutbox, MdMoveToInbox } from 'react-icons/md';
-// import { BiPackage } from 'react-icons/bi';
-
-// const LogisticsPage = () => {
-//   const sendServices = [
-//     {
-//       title: 'Send Single Package',
-//       description: 'Send one package to any location',
-//       icon: <BiPackage className="w-8 h-8" />,
-//       whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20get%20Send%20a%20Single%20Package%20From-%20to%20be%20delivered%20to-',
-//       color: 'bg-blue-500'
-//     },
-//     {
-//       title: 'Send Multiple Packages',
-//       description: 'Send multiple packages in one go',
-//       icon: <FaBoxOpen className="w-8 h-8" />,
-//       whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20get%20Send%20Multiple%20Packages%20From-%20to%20be%20delivered%20to-',
-//       color: 'bg-red-500'
-//     }
-//   ];
-
-//   const receiveServices = [
-//     {
-//       title: 'Receive Package',
-//       description: 'Receive packages from any location',
-//       icon: <MdMoveToInbox className="w-8 h-8" />,
-//       whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20Receive%20a%20Single%20Package%20From-%20to%20be%20delivered%20to-',
-//       color: 'bg-purple-500'
-//     },
-//     {
-//       title: 'Park Receive',
-//       description: 'Receive packages from park locations',
-//       icon: <FaMapMarkerAlt className="w-8 h-8" />,
-//       whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20Receive%20a%20Package%20From-%20Park,%20to%20be%20delivered%20to-',
-//       color: 'bg-orange-500'
-//     }
-//   ];
-
-//   const ServiceCard = ({ service, type }) => (
-//     <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
-//       <div className={`${service.color} text-white p-4 rounded-lg inline-block mb-4`}>
-//         {service.icon}
-//       </div>
-//       <h3 className="text-lg font-semibold text-gray-800 mb-2">{service.title}</h3>
-//       <p className="text-gray-600 text-sm mb-4">{service.description}</p>
-//       <a
-//         href={service.whatsappLink}
-//         target="_blank"
-//         rel="noopener noreferrer"
-//         className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
-//       >
-//         <FaShippingFast className="w-4 h-4" />
-//         {type === 'send' ? 'Send Now' : 'Receive Now'}
-//       </a>
-//     </div>
-//   );
-
-//   return (
-//     <div className="min-h-screen bg-gray-50 pb-20 sm:pb-0">
-//       {/* Header */}
-//       <div className="bg-gradient-to-r from-red-500 to-red-600 text-white">
-//         <div className="px-4 md:px-10 lg:px-20 py-8">
-//           <div className="flex items-center gap-3 mb-4">
-//             <FaTruck className="w-8 h-8" />
-//             <h1 className="text-2xl md:text-3xl font-bold">Logistics Services</h1>
-//           </div>
-//           <p className="text-red-100 text-sm md:text-base">
-//             Fast, reliable package delivery and pickup services across Ilorin
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Main Content */}
-//       <div className="px-4 md:px-10 lg:px-20 py-8">
-        
-//         {/* Send Packages Section */}
-//         <div className="mb-12">
-//           <div className="flex items-center gap-3 mb-6">
-//             <MdOutbox className="w-6 h-6 text-red-500" />
-//             <h2 className="text-xl md:text-2xl font-bold text-gray-800">Send Packages</h2>
-//           </div>
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//             {sendServices.map((service, index) => (
-//               <ServiceCard key={index} service={service} type="send" />
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Receive Packages Section */}
-//         <div className="mb-12">
-//           <div className="flex items-center gap-3 mb-6">
-//             <MdMoveToInbox className="w-6 h-6 text-red-500" />
-//             <h2 className="text-xl md:text-2xl font-bold text-gray-800">Receive Packages</h2>
-//           </div>
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//             {receiveServices.map((service, index) => (
-//               <ServiceCard key={index} service={service} type="receive" />
-//             ))}
-//           </div>
-//         </div>
-
-       
-
-//         {/* Contact Info */}
-//         <div className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-6 md:p-8 text-center">
-//           <h3 className="text-xl font-bold mb-4">Need Help?</h3>
-//           <p className="text-red-100 mb-4">
-//             Contact us directly for any special logistics requirements
-//           </p>
-//           <a
-//             href="https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20need%20help%20with%20logistics%20services"
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             className="inline-flex items-center gap-2 bg-white text-red-600 font-medium py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-//           >
-//             <FaShippingFast className="w-4 h-4" />
-//             Contact Support
-//           </a>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LogisticsPage;
-
-
 import React from 'react';
 import { FaTruck, FaBoxOpen, FaShippingFast, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdLocalShipping, MdOutbox, MdMoveToInbox, MdDeliveryDining } from 'react-icons/md';
@@ -143,12 +14,13 @@ const LogisticsPage = () => {
       color: 'bg-blue-500'
     },
     {
-      title: 'Send Multiple Packages',
-      description: 'Send multiple packages in one go',
-      icon: <FaBoxOpen className="w-8 h-8" />,
-      whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20get%20Send%20Multiple%20Packages%20From-%20to%20be%20delivered%20to-',
-      color: 'bg-red-500'
+      title: 'Park Receive',
+      description: 'Receive packages from park locations',
+      icon: <FaMapMarkerAlt className="w-8 h-8" />,
+      whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20Receive%20a%20Package%20From-%20Park,%20to%20be%20delivered%20to-',
+      color: 'bg-orange-500'
     }
+
   ];
 
   const receiveServices = [
@@ -160,11 +32,11 @@ const LogisticsPage = () => {
       color: 'bg-purple-500'
     },
     {
-      title: 'Park Receive',
-      description: 'Receive packages from park locations',
-      icon: <FaMapMarkerAlt className="w-8 h-8" />,
-      whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20Receive%20a%20Package%20From-%20Park,%20to%20be%20delivered%20to-',
-      color: 'bg-orange-500'
+      title: 'Send Multiple Packages',
+      description: 'Send multiple packages in one go',
+      icon: <FaBoxOpen className="w-8 h-8" />,
+      whatsappLink: 'https://wa.me/+2349118347755?text=Hello%20Handy%20Foods%20and%20Errands!%20I%20Want%20to%20get%20Send%20Multiple%20Packages%20From-%20to%20be%20delivered%20to-',
+      color: 'bg-red-500'
     }
   ];
 

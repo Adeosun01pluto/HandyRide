@@ -1112,9 +1112,9 @@ const RestaurantPage = () => {
       <div className="fixed left-3 sm:left-6 top-[90px] z-40">
         <Link
           to="/foods"
-          className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/95 border border-gray-200 shadow-md hover:shadow-lg hover:border-red-300 text-gray-700 hover:text-red-600 transition-all duration-200"
+          className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-red-500 border border-gray-200 shadow-md hover:shadow-lg  text-white transition-all duration-200"
         >
-          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-red-50 text-red-600">
+          <span className="flex items-center justify-center w-7 h-7 rounded-full text-white-600">
             <MdArrowBack className="w-4 h-4" />
           </span>
           <span className="text-xs sm:text-sm font-semibold">
@@ -1329,12 +1329,12 @@ const RestaurantPage = () => {
                                 </div>
 
                                 {/* Price and Add Button */}
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto gap-4">
+                                <div className="flex items-center justify-between pt-1 md:pt-4 border-t border-gray-100 mt-auto gap-4">
                                   <div>
                                     <p className="text-xs text-gray-500 font-medium mb-1">
                                       Price
                                     </p>
-                                    <span className="text-2xl md:text-3xl font-black text-red-600">
+                                    <span className="text-lg md:text-3xl font-black text-red-600">
                                       ₦{Number(m.price || 0).toLocaleString()}
                                     </span>
                                   </div>
@@ -1342,7 +1342,7 @@ const RestaurantPage = () => {
                                   {!isInCart ? (
                                     <button
                                       onClick={() => handleAddToCart(m)}
-                                      className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                                      className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-2 sm:px-6 py-2.5 sm:py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-[12px] md:text-sm sm:text-base"
                                     >
                                       <MdShoppingCart className="w-5 h-5" />
                                       <span>Add to Cart</span>
