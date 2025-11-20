@@ -16,24 +16,6 @@ const LandingPage = () => {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -right-40 top-1/4 w-[600px] h-[260px] bg-red-50 rounded-[999px] rotate-[-12deg]" />
       </div>
-
-      {/* Top bar */}
-      <header className="relative z-10 max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 pt-6 md:pt-8 w-full">
-        <div className="flex items-center gap-2">
-          <button className="text-3xl font-bold text-red-500">
-            <img
-              className="h-16 w-48 ml-[-10px] object-cover"
-              src={handy}
-              alt="Handy logo"
-            />
-          </button>
-        </div>
-
-        <div className="px-4 md:px-6 py-2 rounded-full bg-gray-100 shadow-sm text-sm md:text-base font-medium text-gray-800 border border-gray-200">
-          www.handyride.ng
-        </div>
-      </header>
-
       {/* Main section fully centered */}
       <main className=" relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 md:px-6">
         
